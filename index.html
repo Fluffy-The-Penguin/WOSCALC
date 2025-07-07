@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Upgrade Calculator</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #f1c40f;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #1a2a3a;
+            --success-color: #27ae60;
+            --info-color: #3498db;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        nav {
+            background-color: var(--dark-color);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        nav ul li {
+            padding: 15px 25px;
+            position: relative;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        nav ul li a i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        nav ul li a:hover {
+            color: var(--secondary-color);
+        }
+        nav ul li.active a {
+            color: var(--secondary-color);
+        }
+        nav ul li.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background-color: var(--secondary-color);
+            border-radius: 3px 3px 0 0;
+        }
+        .calculator-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .calculator-section.active {
+            display: block;
+        }
+        h2 {
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary-color);
+            font-size: 1.8rem;
+        }
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+        select, input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+            transition: all 0.3s;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(241, 196, 15, 0.2);
+        }
+        button {
+            background-color: var(--secondary-color);
+            color: var(--dark-color);
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        button i {
+            margin-right: 8px;
+        }
+        button:hover {
+            background-color: #f39c12;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f8f5;
+            border-radius: 8px;
+            display: none;
+            border-left: 4px solid var(--success-color);
+        }
+        .result h3 {
+            color: var(--success-color);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+        .result h3 i {
+            margin-right: 10px;
+        }
+        .result p {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+        .result span {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        .requirements-table {
+            margin-top: 40px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .requirements-table h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+        .requirements-table h3 i {
+            margin-right: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            min-width: 600px;
+        }
+        th, td {
+            padding: 14px 16px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #eaeaea;
+        }
+        .note {
+            margin-top: 15px;
+            font-size: 0.95rem;
+            color: #666;
+            font-style: italic;
+        }
+        .coming-soon {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .coming-soon i {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+        .coming-soon h3 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        @media (max-width: 768px) {
+            nav ul li {
+                padding: 12px 15px;
+            }
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark-color);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .gear-block {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        select:disabled {
+    background-color: #eee;
+    color: #888;
+    cursor: not-allowed;
+}
+#upgrade-steps table {
+    margin-top: 15px;
+    width: 100%;
+    border-collapse: collapse;
+}
+#upgrade-steps th, #upgrade-steps td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+#upgrade-steps th {
+    background-color: var(--primary-color);
+    color: white;
+}
+#upgrade-steps tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+.gear-block {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--secondary-color);
+}
+
+.gear-level-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr 100px;
+    gap: 15px;
+    align-items: center;
+}
+
+.gear-preview {
+    text-align: center;
+}
+
+.gear-preview img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.gear-header {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: left;
+    padding-left: 15px !important;
+}
+
+#calculate-all-gears:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+#upgrade-steps-gears td {
+    text-align: center;
+}
+
+#upgrade-steps-gears td:empty:before {
+    content: '-';
+    color: #999;
+}
+#upgrade-steps-gears {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#upgrade-steps-gears th, 
+#upgrade-steps-gears td {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+#upgrade-steps-gears th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+}
+
+#upgrade-steps-gears .gear-header {
+    background-color: var(--dark-color);
+    text-align: left;
+    padding-left: 15px;
+}
+
+#upgrade-steps-gears tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+#upgrade-steps-gears {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#upgrade-steps-gears th, 
+#upgrade-steps-gears td {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+#upgrade-steps-gears th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+}
+
+#upgrade-steps-gears .gear-name {
+    background-color: var(--dark-color);
+    color: white;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+#upgrade-steps-gears tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+/* Ensure table headers don't repeat */
+#upgrade-steps-gears thead {
+    display: table-header-group;
+}
+
+#upgrade-steps-gears tbody {
+    display: table-row-group;
+}
+/* Table styling */
+#upgrade-steps-gears table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#upgrade-steps-gears th, 
+#upgrade-steps-gears td {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+#upgrade-steps-gears th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+}
+
+#upgrade-steps-gears .gear-name {
+    background-color: var(--dark-color);
+    color: white;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+#upgrade-steps-gears tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+/* --- CHIEF CHARMS STYLES --- */
+.charm-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.charm-set {
+    flex: 1;
+    min-width: 250px;
+    background-color: #f8f8f8;
+    padding: 15px;
+    border-radius: 6px;
+}
+.gear-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+form-group {
+    margin-bottom: 15px;
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #fff;
+}
+@media (max-width: 768px) {
+    .charm-row {
+        flex-direction: column;
+    }
+    .charm-set {
+        min-width: 100%;
+    }
+}
+#charms-result table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+#charms-result th,
+#charms-result td {
+    padding: 10px 15px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+#charms-result th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+}
+#charms-result tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+/* Keep existing styles for table cells */
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css ">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Game Upgrade Calculator</h1>
+            <p>Calculate resources needed for your hero and base upgrades</p>
+        </header>
+        <nav>
+            <ul>
+                <li class="active"><a href="#" data-section="hero-shards"><i class="fas fa-star"></i> Hero Shards</a></li>
+                <li><a href="#" data-section="chief-gears"><i class="fas fa-helmet-battle"></i> Chief Gears</a></li>
+                <li><a href="#" data-section="chief-charms"><i class="fas fa-gem"></i> Chief Charms</a></li>
+                <li><a href="#" data-section="building-upgrades"><i class="fas fa-building"></i> Building Upgrades</a></li>
+            </ul>
+        </nav>
+
+        <!-- Hero Shards Calculator -->
+        <section id="hero-shards" class="calculator-section active">
+            <h2><i class="fas fa-star"></i> Hero Shards Calculator</h2>
+            <div class="calculator-grid">
+                <div>
+                    <div class="form-group">
+                        <label for="current-star">Current Star Level</label>
+                        <select id="current-star">
+                            <option value="0">0 Stars</option>
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="5">5 Stars (Max)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="current-tier">Current Tier</label>
+                        <select id="current-tier">
+                            <option value="0">Tier 0</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label for="target-star">Target Star Level</label>
+                        <select id="target-star">
+                            <option value="0">0 Stars</option>
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="5" selected>5 Stars (Max)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="target-tier">Target Tier</label>
+                        <select id="target-tier">
+                            <option value="0">Tier 0</option>
+                            <option value="1">Tier 1</option>
+                            <option value="2">Tier 2</option>
+                            <option value="3">Tier 3</option>
+                            <option value="4">Tier 4</option>
+                            <option value="5">Tier 5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="current-shards">
+                    Current Shards Owned (optional)
+                    <span class="tooltip">
+                        <i class="fas fa-question-circle"></i>
+                        <span class="tooltiptext">Enter the number of shards you currently have to calculate how many more you need</span>
+                    </span>
+                </label>
+                <input type="number" id="current-shards" min="0" value="0" placeholder="Enter shards you already have">
+            </div>
+            <button id="calculate-shards">
+                <i class="fas fa-calculator"></i> Calculate Required Shards
+            </button>
+            <div id="shards-result" class="result">
+                <h3><i class="fas fa-clipboard-check"></i> Calculation Results</h3>
+                <p>Total Shards Required: <span id="total-shards">0</span></p>
+                <p>After Deducting Owned Shards: <span id="final-shards">0</span></p>
+            </div>
+            <!-- Add this inside the hero-shards section, right after the existing result div -->
+<!-- Replace the existing upgrade-steps div with this -->
+<div id="upgrade-steps" class="result" style="display: none;">
+    <h3><i class="fas fa-list-ol"></i> Upgrade Steps Breakdown</h3>
+    <table id="steps-table">
+        <thead>
+            <tr>
+                <th>From → To</th>
+                <th>Tier 1</th>
+                <th>Tier 2</th>
+                <th>Tier 3</th>
+                <th>Tier 4</th>
+                <th>Tier 5</th>
+                <th>Promote</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="steps-body">
+            <!-- Will be populated by JavaScript -->
+        </tbody>
+    </table>
+</div>
+            <div class="requirements-table">
+    <h3><i class="fas fa-table"></i> Shard Requirements per Star Level</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Star Transition</th>
+                <th>Tier 1</th>
+                <th>Tier 2</th>
+                <th>Tier 3</th>
+                <th>Tier 4</th>
+                <th>Tier 5</th>
+                <th>Tier 6</th>
+                <th>Total per Star</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0 → 1st Star</td>
+                <td>1</td>
+                <td>1</td>
+                <td>2</td>
+                <td>2</td>
+                <td>2</td>
+                <td>2</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>1st → 2nd Star</td>
+                <td>5</td>
+                <td>5</td>
+                <td>5</td>
+                <td>5</td>
+                <td>5</td>
+                <td>15</td>
+                <td>40</td>
+            </tr>
+            <tr>
+                <td>2nd → 3rd Star</td>
+                <td>15</td>
+                <td>15</td>
+                <td>15</td>
+                <td>15</td>
+                <td>15</td>
+                <td>40</td>
+                <td>115</td>
+            </tr>
+            <tr>
+                <td>3rd → 4th Star</td>
+                <td>40</td>
+                <td>40</td>
+                <td>40</td>
+                <td>40</td>
+                <td>40</td>
+                <td>100</td>
+                <td>300</td>
+            </tr>
+            <tr>
+                <td>4th → 5th Star</td>
+                <td>100</td>
+                <td>100</td>
+                <td>100</td>
+                <td>100</td>
+                <td>100</td>
+                <td>100</td>
+                <td>600</td>
+            </tr>
+        </tbody>
+    </table>
+    <p class="note" style="color: green; font-weight: bold;">Note: Each star has 6 tiers. Completing all 6 tiers advances the hero to the next star level. 5 stars is the maximum level.</p>
+    <p class="note" style="color: red; font-weight: bold;">Heroes need some shards to unlock as well and it varies to different heroes. (Example: Jessie needs 40 shards to unlock so her total shards required to max her out will be 1065+40=1105 whereas Jasser requires only 10 shards to unlock so total shards required for him will be 1065+10=1075)</p>
+</div>
+        </section>
+
+        <!-- Chief Gears Calculator -->
+<section id="chief-gears" class="calculator-section">
+    <h2><i class="fas fa-helmet-battle"></i> Chief Gears Calculator</h2>
+
+     <p>Select current and target levels for each of the 6 gears below:</p>
+    <div id="gears-container"></div>
+
+    <!-- Current Resource Inputs -->
+    <div class="form-group">
+    <label for="owned-alloy">
+        Current Hardened Alloy Owned (optional)
+        <span class="tooltip">
+            <i class="fas fa-question-circle"></i>
+            <span class="tooltiptext">Enter the amount of Hardened Alloy you currently have to calculate how much more you need</span>
+        </span>
+    </label>
+    <input type="number" id="owned-alloy" min="0" value="0" placeholder="Enter current alloy">
+</div>
+<div class="form-group">
+    <label for="owned-solution">
+        Current Polishing Solution Owned (optional)
+        <span class="tooltip">
+            <i class="fas fa-question-circle"></i>
+            <span class="tooltiptext">Enter the amount of Polishing Solution you currently have to calculate how much more you need</span>
+        </span>
+    </label>
+    <input type="number" id="owned-solution" min="0" value="0" placeholder="Enter current polishing solution">
+</div>
+<div class="form-group">
+    <label for="owned-design">
+        Current Design Plans Owned (optional)
+        <span class="tooltip">
+            <i class="fas fa-question-circle"></i>
+            <span class="tooltiptext">Enter the amount of Design Plans you currently have to calculate how much more you need</span>
+        </span>
+    </label>
+    <input type="number" id="owned-design" min="0" value="0" placeholder="Enter current design plans">
+</div>
+<div class="form-group">
+    <label for="owned-amber">
+        Current Lunar Amber Owned (optional)
+        <span class="tooltip">
+            <i class="fas fa-question-circle"></i>
+            <span class="tooltiptext">Enter the amount of Lunar Amber you currently have to calculate how much more you need</span>
+        </span>
+    </label>
+    <input type="number" id="owned-amber" min="0" value="0" placeholder="Enter current lunar amber">
+</div>
+
+   
+
+    <button id="calculate-all-gears">
+        <i class="fas fa-calculator"></i> Calculate Total Resource Requirements
+    </button>
+
+    <!-- Result Summary -->
+    <div id="gear-result" class="result">
+        <h3><i class="fas fa-clipboard-check"></i> Total Resource Requirements</h3>
+        <p>Total Hardened Alloy: <span id="alloy-needed">0</span></p>
+        <p>Total Polishing Solution: <span id="solution-needed">0</span></p>
+        <p>Total Design Plans: <span id="design-needed">0</span></p>
+        <p>Total Lunar Amber: <span id="amber-needed">0</span></p>
+        <hr />
+        <p>After Deducting Owned Resources:</p>
+        <p>Hardened Alloy Needed: <span id="final-alloy">0</span></p>
+        <p>Polishing Solution Needed: <span id="final-solution">0</span></p>
+        <p>Design Plans Needed: <span id="final-design">0</span></p>
+        <p>Lunar Amber Needed: <span id="final-amber">0</span></p>
+    </div>
+
+   <!-- Upgrade Steps Table -->
+<div id="upgrade-steps-gears" class="requirements-table" style="display: none;">
+    <h3><i class="fas fa-list-ol"></i> Gear Upgrade Breakdown</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Gear Name</th>
+                <th>From Level</th>
+                <th>To Level</th>
+                <th>Hardened Alloy</th>
+                <th>Polishing Solution</th>
+                <th>Design Plans</th>
+                <th>Lunar Amber</th>
+            </tr>
+        </thead>
+        <tbody id="steps-body-gears"></tbody>
+    </table>
+</div>
+<div class="requirements-table">
+    <h3><i class="fas fa-table"></i> Gear Upgrade Resource Requirements</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Gear Level</th>
+                <th>Hardened Alloy</th>
+                <th>Polishing Solution</th>
+                <th>Design Plans</th>
+                <th>Lunar Amber</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Green Lvl 0</td><td>1,500</td><td>15</td><td>0</td><td>0</td></tr>
+            <tr><td>Green Lvl 1</td><td>3,800</td><td>40</td><td>0</td><td>0</td></tr>
+            <tr><td>Blue Lvl 0</td><td>7,000</td><td>70</td><td>0</td><td>0</td></tr>
+            <tr><td>Blue Lvl 1</td><td>9,700</td><td>95</td><td>0</td><td>0</td></tr>
+            <tr><td>Blue Lvl 2</td><td>0</td><td>0</td><td>45</td><td>0</td></tr>
+            <tr><td>Blue Lvl 3</td><td>0</td><td>0</td><td>50</td><td>0</td></tr>
+            <tr><td>Purple Lvl 0</td><td>0</td><td>0</td><td>60</td><td>0</td></tr>
+            <tr><td>Purple Lvl 1</td><td>0</td><td>0</td><td>70</td><td>0</td></tr>
+            <tr><td>Purple Lvl 2</td><td>6,500</td><td>65</td><td>40</td><td>0</td></tr>
+            <tr><td>Purple Lvl 3</td><td>8,000</td><td>80</td><td>50</td><td>0</td></tr>
+            <tr><td>Purple T1 Lvl 0</td><td>10,000</td><td>95</td><td>60</td><td>0</td></tr>
+            <tr><td>Purple T1 Lvl 1</td><td>11,000</td><td>110</td><td>70</td><td>0</td></tr>
+            <tr><td>Purple T1 Lvl 2</td><td>13,000</td><td>130</td><td>85</td><td>0</td></tr>
+            <tr><td>Purple T1 Lvl 3</td><td>15,000</td><td>160</td><td>100</td><td>0</td></tr>
+            <tr><td>Gold Lvl 0</td><td>22,000</td><td>220</td><td>40</td><td>0</td></tr>
+            <tr><td>Gold Lvl 1</td><td>23,000</td><td>230</td><td>40</td><td>0</td></tr>
+            <tr><td>Gold Lvl 2</td><td>25,000</td><td>250</td><td>45</td><td>0</td></tr>
+            <tr><td>Gold Lvl 3</td><td>26,000</td><td>260</td><td>45</td><td>0</td></tr>
+            <tr><td>Gold T1 Lvl 0</td><td>28,000</td><td>280</td><td>45</td><td>0</td></tr>
+            <tr><td>Gold T1 Lvl 1</td><td>30,000</td><td>300</td><td>55</td><td>0</td></tr>
+            <tr><td>Gold T1 Lvl 2</td><td>32,000</td><td>320</td><td>55</td><td>0</td></tr>
+            <tr><td>Gold T1 Lvl 3</td><td>35,000</td><td>340</td><td>55</td><td>0</td></tr>
+            <tr><td>Gold T2 Lvl 0</td><td>38,000</td><td>390</td><td>55</td><td>0</td></tr>
+            <tr><td>Gold T2 Lvl 1</td><td>43,000</td><td>430</td><td>75</td><td>0</td></tr>
+            <tr><td>Gold T2 Lvl 2</td><td>45,000</td><td>460</td><td>80</td><td>0</td></tr>
+            <tr><td>Gold T2 Lvl 3</td><td>48,000</td><td>500</td><td>85</td><td>0</td></tr>
+            <tr><td>Pink Lvl 0</td><td>50,000</td><td>530</td><td>85</td><td>10</td></tr>
+            <tr><td>Pink Lvl 1</td><td>52,000</td><td>560</td><td>90</td><td>10</td></tr>
+            <tr><td>Pink Lvl 2</td><td>54,000</td><td>590</td><td>95</td><td>10</td></tr>
+            <tr><td>Pink Lvl 3</td><td>56,000</td><td>620</td><td>100</td><td>10</td></tr>
+            <tr><td>Pink T1 Lvl 0</td><td>59,000</td><td>670</td><td>110</td><td>15</td></tr>
+            <tr><td>Pink T1 Lvl 1</td><td>61,000</td><td>700</td><td>115</td><td>15</td></tr>
+            <tr><td>Pink T1 Lvl 2</td><td>63,000</td><td>730</td><td>120</td><td>15</td></tr>
+            <tr><td>Pink T1 Lvl 3</td><td>65,000</td><td>760</td><td>125</td><td>15</td></tr>
+            <tr><td>Pink T2 Lvl 0</td><td>68,000</td><td>810</td><td>135</td><td>20</td></tr>
+            <tr><td>Pink T2 Lvl 1</td><td>70,000</td><td>840</td><td>140</td><td>20</td></tr>
+            <tr><td>Pink T2 Lvl 2</td><td>72,000</td><td>870</td><td>145</td><td>20</td></tr>
+            <tr><td>Pink T2 Lvl 3</td><td>74,000</td><td>900</td><td>150</td><td>20</td></tr>
+            <tr><td>Pink T3 Lvl 0</td><td>77,000</td><td>950</td><td>160</td><td>25</td></tr>
+            <tr><td>Pink T3 Lvl 1</td><td>80,000</td><td>990</td><td>165</td><td>25</td></tr>
+            <tr><td>Pink T3 Lvl 2</td><td>83,000</td><td>1,030</td><td>170</td><td>25</td></tr>
+            <tr><td>Pink T3 Lvl 3</td><td>86,000</td><td>1,070</td><td>180</td><td>25</td></tr>
+        </tbody>
+    </table>
+    <p class="note" style="color: green; font-weight: bold;">
+        Note: Each gear has multiple levels across different rarities. The resources listed are cumulative per upgrade.
+    </p>
+</div>
+</section>
+        <!-- Chief Charms Calculator -->
+<section id="chief-charms" class="calculator-section">
+    <h2><i class="fas fa-gem"></i> Chief Charms Calculator</h2>
+    <p>Select current and target levels for each of the 6 gears below:</p>
+    <div id="charms-container"></div>
+    <button id="calculate-charms">
+        <i class="fas fa-calculator"></i> Calculate Resource Requirements
+    </button>
+    <div id="charms-result" class="result" style="display: none;">
+        <h3><i class="fas fa-clipboard-check"></i> Calculation Results</h3>
+        <p>Total Charm Guides Needed: <span id="total-guides">0</span></p>
+        <p>Total Charm Designs Needed: <span id="total-designs">0</span></p>
+        <p>Total Jewel Secrets Needed: <span id="total-secrets">0</span></p>
+        <h3 style="margin-top: 20px;"><i class="fas fa-list-ol"></i> Upgrade Breakdown</h3>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Gear</th>
+                        <th>Charm</th>
+                        <th>From Level</th>
+                        <th>To Level</th>
+                        <th>Charm Guides</th>
+                        <th>Charm Designs</th>
+                        <th>Jewel Secrets</th>
+                    </tr>
+                </thead>
+                <tbody id="steps-body-charms"></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="requirements-table">
+    <h3><i class="fas fa-table"></i> Charm Upgrade Requirements</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Charm Level</th>
+                <th>Charm Guides</th>
+                <th>Charm Designs</th>
+                <th>Jewel Secrets</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Level 1 → 2</td><td>40</td><td>15</td><td>-</td></tr>
+            <tr><td>Level 2 → 3</td><td>60</td><td>40</td><td>-</td></tr>
+            <tr><td>Level 3 → 4</td><td>80</td><td>100</td><td>-</td></tr>
+            <tr><td>Level 4 → 5</td><td>100</td><td>200</td><td>-</td></tr>
+            <tr><td>Level 5 → 6</td><td>120</td><td>300</td><td>-</td></tr>
+            <tr><td>Level 6 → 7</td><td>140</td><td>400</td><td>-</td></tr>
+            <tr><td>Level 7 → 8</td><td>200</td><td>400</td><td>-</td></tr>
+            <tr><td>Level 8 → 9</td><td>300</td><td>400</td><td>-</td></tr>
+            <tr><td>Level 9 → 10</td><td>420</td><td>420</td><td>-</td></tr>
+            <tr><td>Level 10 → 11</td><td>560</td><td>420</td><td>-</td></tr>
+            <tr><td>Level 11 → 12</td><td>580</td><td>450</td><td>15</td></tr>
+            <tr><td>Level 12 → 13</td><td>580</td><td>450</td><td>30</td></tr>
+            <tr><td>Level 13 → 14</td><td>600</td><td>500</td><td>45</td></tr>
+            <tr><td>Level 14 → 15</td><td>600</td><td>500</td><td>70</td></tr>
+            <tr><td>Level 15 → 16</td><td>650</td><td>550</td><td>100</td></tr>
+        </tbody>
+    </table>
+    <p class="note" style="color: green; font-weight: bold;">
+        Note: Jewel Secrets are required only from Level 12 onward. All other upgrades use Charm Guides and Charm Designs.
+    </p>
+</div>
+</section>
+
+        <!-- Building Upgrades Calculator -->
+        <section id="building-upgrades" class="calculator-section">
+            <div class="coming-soon">
+                <i class="fas fa-building"></i>
+                <h3>Building Upgrades Calculator</h3>
+                <p>Coming soon!</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Navigation between calculators
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('nav li').forEach(item => item.classList.remove('active'));
+                e.target.parentElement.classList.add('active');
+                const sectionId = e.target.getAttribute('data-section');
+                document.querySelectorAll('.calculator-section').forEach(section => section.classList.remove('active'));
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+        // Shard Transition Map
+        const shardTransitions = {
+            "0_0_to_0_1": 1,
+            "0_1_to_0_2": 1,
+            "0_2_to_0_3": 2,
+            "0_3_to_0_4": 2,
+            "0_4_to_0_5": 2,
+            "0_5_to_1_0": 2,
+
+            "1_0_to_1_1": 5,
+            "1_1_to_1_2": 5,
+            "1_2_to_1_3": 5,
+            "1_3_to_1_4": 5,
+            "1_4_to_1_5": 5,
+            "1_5_to_2_0": 15,
+
+            "2_0_to_2_1": 15,
+            "2_1_to_2_2": 15,
+            "2_2_to_2_3": 15,
+            "2_3_to_2_4": 15,
+            "2_4_to_2_5": 15,
+            "2_5_to_3_0": 40,
+
+            "3_0_to_3_1": 40,
+            "3_1_to_3_2": 40,
+            "3_2_to_3_3": 40,
+            "3_3_to_3_4": 40,
+            "3_4_to_3_5": 40,
+            "3_5_to_4_0": 100,
+
+            "4_0_to_4_1": 100,
+            "4_1_to_4_2": 100,
+            "4_2_to_4_3": 100,
+            "4_3_to_4_4": 100,
+            "4_4_to_4_5": 100,
+            "4_5_to_5_0": 100
+        };
+
+        // Update tier options based on star selection
+        // Update tier options based on star selection
+function updateTierOptions(starSelectId, tierSelectId, isCurrent = false) {
+    const starSelect = document.getElementById(starSelectId);
+    const tierSelect = document.getElementById(tierSelectId);
+    const currentStar = parseInt(starSelect.value);
+    const savedTier = tierSelect.value;
+    tierSelect.innerHTML = '';
+    if (currentStar === 5) {
+        // Disable tier selection for 5-star heroes
+        const option = document.createElement('option');
+        option.textContent = 'Max (No Tiers)';
+        option.disabled = true;
+        tierSelect.appendChild(option);
+        tierSelect.value = '0'; // Reset value but keep it disabled
+    } else {
+        for (let i = 0; i <= 5; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = `Tier ${i}`;
+            tierSelect.appendChild(option);
+        }
+        tierSelect.value = savedTier || (isCurrent ? '0' : '5');
+    }
+}
+function calculateShards() {
+    const currentStar = parseInt(document.getElementById('current-star').value);
+    const currentTier = parseInt(document.getElementById('current-tier').value);
+    const targetStar = parseInt(document.getElementById('target-star').value);
+    const targetTier = parseInt(document.getElementById('target-tier').value);
+    const currentShards = parseInt(document.getElementById('current-shards').value) || 0;
+
+    // Reset results
+    document.getElementById('shards-result').style.display = 'none';
+    document.getElementById('upgrade-steps').style.display = 'none';
+    document.getElementById('steps-body').innerHTML = '';
+
+    // Validate input
+    if (currentStar > targetStar || 
+        (currentStar === targetStar && currentTier > targetTier)) {
+        alert('Target level must be higher than current level!');
+        return;
+    }
+
+    // Special case: already at max level
+    if (currentStar === 5 && targetStar === 5) {
+        document.getElementById('total-shards').textContent = 0;
+        document.getElementById('final-shards').textContent = Math.max(0, 0 - currentShards);
+        document.getElementById('shards-result').style.display = 'block';
+        return;
+    }
+
+    let totalShards = 0;
+    let cs = currentStar, ct = currentTier;
+    let stepsHTML = '';
+    let starRows = {};
+
+    // Initialize star rows
+    for (let star = currentStar; star <= targetStar; star++) {
+        starRows[star] = {
+            tiers: [0, 0, 0, 0, 0],
+            promote: 0,
+            total: 0
+        };
+    }
+
+    while (!(cs === targetStar && ct === targetTier)) {
+        if (cs === 5) break;
+
+        if (ct < 5 && (cs < targetStar || ct < targetTier)) {
+            // Tier upgrade
+            const stepKey = `${cs}_${ct}_to_${cs}_${ct + 1}`;
+            const stepCost = shardTransitions[stepKey] || 0;
+            starRows[cs].tiers[ct] = (starRows[cs].tiers[ct] || 0) + stepCost;
+            starRows[cs].total += stepCost;
+            totalShards += stepCost;
+            ct++;
+        } else if (cs < targetStar) {
+            // Star promotion
+            const stepKey = `${cs}_5_to_${cs + 1}_0`;
+            const stepCost = shardTransitions[stepKey] || 0;
+            starRows[cs].promote = stepCost;
+            starRows[cs].total += stepCost;
+            totalShards += stepCost;
+            cs++;
+            ct = 0;
+        } else {
+            break;
+        }
+    }
+
+    // Build the table rows
+    for (let star = currentStar; star < targetStar; star++) {  // Changed <= to < to exclude targetStar
+    if (starRows[star] && starRows[star].total > 0) {      // Added check for total > 0
+        const row = starRows[star];
+        stepsHTML += `
+            <tr>
+                <td>${star}★ → ${star+1}★</td>
+                <td>${row.tiers[0] || '-'}</td>
+                <td>${row.tiers[1] || '-'}</td>
+                <td>${row.tiers[2] || '-'}</td>
+                <td>${row.tiers[3] || '-'}</td>
+                <td>${row.tiers[4] || '-'}</td>
+                <td>${row.promote || '-'}</td>
+                <td>${row.total}</td>
+            </tr>`;
+    }
+}
+    const finalShards = Math.max(0, totalShards - currentShards);
+    document.getElementById('total-shards').textContent = totalShards;
+    document.getElementById('final-shards').textContent = finalShards;
+    document.getElementById('steps-body').innerHTML = stepsHTML;
+    
+    // Show results
+    document.getElementById('shards-result').style.display = 'block';
+    if (stepsHTML) {
+        document.getElementById('upgrade-steps').style.display = 'block';
+    }
+}
+        // Gear Resources Data
+        const gearResources = {
+            "green_0": { alloy: 1500, solution: 15, design: 0, amber: 0 },
+            "green_1": { alloy: 3800, solution: 40, design: 0, amber: 0 },
+            "blue_0": { alloy: 7000, solution: 70, design: 0, amber: 0 },
+            "blue_1": { alloy: 9700, solution: 95, design: 0, amber: 0 },
+            "blue_2": { alloy: 0, solution: 0, design: 45, amber: 0 },
+            "blue_3": { alloy: 0, solution: 0, design: 50, amber: 0 },
+            "purple_0": { alloy: 0, solution: 0, design: 60, amber: 0 },
+            "purple_1": { alloy: 0, solution: 0, design: 70, amber: 0 },
+            "purple_2": { alloy: 6500, solution: 65, design: 40, amber: 0 },
+            "purple_3": { alloy: 8000, solution: 80, design: 50, amber: 0 },
+            "purple_t1_0": { alloy: 10000, solution: 95, design: 60, amber: 0 },
+            "purple_t1_1": { alloy: 11000, solution: 110, design: 70, amber: 0 },
+            "purple_t1_2": { alloy: 13000, solution: 130, design: 85, amber: 0 },
+            "purple_t1_3": { alloy: 15000, solution: 160, design: 100, amber: 0 },
+            "gold_0": { alloy: 22000, solution: 220, design: 40, amber: 0 },
+            "gold_1": { alloy: 23000, solution: 230, design: 40, amber: 0 },
+            "gold_2": { alloy: 25000, solution: 250, design: 45, amber: 0 },
+            "gold_3": { alloy: 26000, solution: 260, design: 45, amber: 0 },
+            "gold_t1_0": { alloy: 28000, solution: 280, design: 45, amber: 0 },
+            "gold_t1_1": { alloy: 30000, solution: 300, design: 55, amber: 0 },
+            "gold_t1_2": { alloy: 32000, solution: 320, design: 55, amber: 0 },
+            "gold_t1_3": { alloy: 35000, solution: 340, design: 55, amber: 0 },
+            "gold_t2_0": { alloy: 38000, solution: 390, design: 55, amber: 0 },
+            "gold_t2_1": { alloy: 43000, solution: 430, design: 75, amber: 0 },
+            "gold_t2_2": { alloy: 45000, solution: 460, design: 80, amber: 0 },
+            "gold_t2_3": { alloy: 48000, solution: 500, design: 85, amber: 0 },
+            "pink_0": { alloy: 50000, solution: 530, design: 85, amber: 10 },
+            "pink_1": { alloy: 52000, solution: 560, design: 90, amber: 10 },
+            "pink_2": { alloy: 54000, solution: 590, design: 95, amber: 10 },
+            "pink_3": { alloy: 56000, solution: 620, design: 100, amber: 10 },
+            "pink_t1_0": { alloy: 59000, solution: 670, design: 110, amber: 15 },
+            "pink_t1_1": { alloy: 61000, solution: 700, design: 115, amber: 15 },
+            "pink_t1_2": { alloy: 63000, solution: 730, design: 120, amber: 15 },
+            "pink_t1_3": { alloy: 65000, solution: 760, design: 125, amber: 15 },
+            "pink_t2_0": { alloy: 68000, solution: 810, design: 135, amber: 20 },
+            "pink_t2_1": { alloy: 70000, solution: 840, design: 140, amber: 20 },
+            "pink_t2_2": { alloy: 72000, solution: 870, design: 145, amber: 20 },
+            "pink_t2_3": { alloy: 74000, solution: 900, design: 150, amber: 20 },
+            "pink_t3_0": { alloy: 77000, solution: 950, design: 160, amber: 25 },
+            "pink_t3_1": { alloy: 80000, solution: 990, design: 165, amber: 25 },
+            "pink_t3_2": { alloy: 83000, solution: 1030, design: 170, amber: 25 },
+            "pink_t3_3": { alloy: 86000, solution: 1070, design: 180, amber: 25 }
+        };
+
+        const gearNames = [
+            { value: "cap", label: "Cap (Lancer)" },
+            { value: "watch", label: "Watch (Lancer)" },
+            { value: "coat", label: "Coat (Infantry)" },
+            { value: "pants", label: "Pants (Infantry)" },
+            { value: "belt", label: "Belt (Marksman)" },
+            { value: "staff", label: "Staff (Marksman)" }
+        ];
+
+       function createGearSelector(index) {
+    const gearDiv = document.createElement("div");
+    gearDiv.className = "gear-block";
+    gearDiv.innerHTML = `
+        <h4>${gearNames[index].label}</h4>
+        <div class="gear-level-selector">
+            <div class="form-group">
+                <label>Current Level</label>
+                <select class="current-level">
+                    ${generateLevelOptions()}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Target Level</label>
+                <select class="target-level">
+                    ${generateLevelOptions()}
+                </select>
+            </div>
+            <div class="gear-preview">
+                <img src="icons/${gearNames[index].value}.png" alt="${gearNames[index].label}">
+            </div>
+        </div>
+    `;
+    return gearDiv;
+}
+function calculateGearUpgrade(current, target) {
+    const levels = Object.keys(gearResources);
+    const startIdx = levels.indexOf(current);
+    const endIdx = levels.indexOf(target);
+    
+    let resources = {
+        alloy: 0,
+        solution: 0,
+        design: 0,
+        amber: 0,
+        steps: []
+    };
+    
+    for (let i = startIdx + 1; i <= endIdx; i++) {
+        const res = gearResources[levels[i]];
+        resources.alloy += res.alloy;
+        resources.solution += res.solution;
+        resources.design += res.design;
+        resources.amber += res.amber;
+        resources.steps.push({
+            from: levels[i-1],
+            to: levels[i],
+            costs: res
+        });
+    }
+    
+    return resources;
+}
+function displayGearResults(total, owned, steps) {
+    // Update summary totals
+    document.getElementById("alloy-needed").textContent = total.alloy.toLocaleString();
+    document.getElementById("solution-needed").textContent = total.solution.toLocaleString();
+    document.getElementById("design-needed").textContent = total.design.toLocaleString();
+    document.getElementById("amber-needed").textContent = total.amber.toLocaleString();
+
+    // Calculate final needed
+    document.getElementById("final-alloy").textContent = Math.max(0, total.alloy - owned.alloy).toLocaleString();
+    document.getElementById("final-solution").textContent = Math.max(0, total.solution - owned.solution).toLocaleString();
+    document.getElementById("final-design").textContent = Math.max(0, total.design - owned.design).toLocaleString();
+    document.getElementById("final-amber").textContent = Math.max(0, total.amber - owned.amber).toLocaleString();
+
+    // Build detailed steps table (without including the header again)
+    let stepsHTML = `<tbody>`;
+    steps.forEach(gearSteps => {
+        gearSteps.steps.forEach((step, i) => {
+            stepsHTML += `
+                <tr>
+                    ${i === 0 ? `<td rowspan="${gearSteps.steps.length}" class="gear-name">${gearSteps.name}</td>` : ''}
+                    <td>${formatLevelName(step.from)}</td>
+                    <td>${formatLevelName(step.to)}</td>
+                    <td>${step.costs.alloy.toLocaleString()}</td>
+                    <td>${step.costs.solution.toLocaleString()}</td>
+                    <td>${step.costs.design ? step.costs.design.toLocaleString() : '-'}</td>
+                    <td>${step.costs.amber ? step.costs.amber.toLocaleString() : '-'}</td>
+                </tr>`;
+        });
+    });
+    stepsHTML += `</tbody>`;
+    
+    // Replace only the tbody content
+    document.getElementById("steps-body-gears").innerHTML = stepsHTML;
+
+    // Show result sections
+    document.getElementById("gear-result").style.display = "block";
+    document.getElementById("upgrade-steps-gears").style.display = "block";
+}
+
+function formatLevelName(level) {
+    return level.replace(/_/g, ' ').toUpperCase();
+}
+        function generateLevelOptions() {
+            const levels = Object.keys(gearResources);
+            let options = '';
+            levels.forEach(level => {
+                const label = level.replace(/_/g, ' ').toUpperCase();
+                options += `<option value="${level}">${label}</option>`;
+            });
+            return options;
+        }
+
+// --- CHIEF CHARMS LOGIC ---
+const charmGearNames = [
+    { value: "cap", label: "Cap (Lancer)", charms: ["1", "2", "3"] },
+    { value: "watch", label: "Watch (Lancer)", charms: ["1", "2", "3"] },
+    { value: "coat", label: "Coat (Infantry)", charms: ["1", "2", "3"] },
+    { value: "pants", label: "Pants (Infantry)", charms: ["1", "2", "3"] },
+    { value: "belt", label: "Belt (Marksman)", charms: ["1", "2", "3"] },
+    { value: "staff", label: "Staff (Marksman)", charms: ["1", "2", "3"] }
+];
+
+const charmLevels = [
+    { level: 1, guides: 5, designs: 5, secrets: 0, power: 205700 },
+    { level: 2, guides: 40, designs: 15, secrets: 0, power: 288000 },
+    { level: 3, guides: 60, designs: 40, secrets: 0, power: 370000 },
+    { level: 4, guides: 80, designs: 100, secrets: 0, power: 452000 },
+    { level: 5, guides: 100, designs: 200, secrets: 0, power: 576000 },
+    { level: 6, guides: 120, designs: 300, secrets: 0, power: 700000 },
+    { level: 7, guides: 140, designs: 400, secrets: 0, power: 824000 },
+    { level: 8, guides: 200, designs: 400, secrets: 0, power: 948000 },
+    { level: 9, guides: 300, designs: 400, secrets: 0, power: 1072000 },
+    { level: 10, guides: 420, designs: 420, secrets: 0, power: 1196000 },
+    { level: 11, guides: 560, designs: 420, secrets: 0, power: 1320000 },
+    { level: 12, guides: 580, designs: 450, secrets: 15, power: 0 },
+    { level: 13, guides: 580, designs: 450, secrets: 30, power: 0 },
+    { level: 14, guides: 600, designs: 500, secrets: 45, power: 0 },
+    { level: 15, guides: 600, designs: 500, secrets: 70, power: 0 },
+    { level: 16, guides: 650, designs: 550, secrets: 100, power: 0 }
+];
+
+function createCharmsSelector(gearIndex) {
+    const gearDiv = document.createElement("div");
+    gearDiv.className = "gear-group";
+    const header = document.createElement("div");
+    header.className = "gear-header";
+    header.textContent = charmGearNames[gearIndex].label;
+    gearDiv.appendChild(header);
+    const charmRow = document.createElement("div");
+    charmRow.className = "charm-row";
+    charmGearNames[gearIndex].charms.forEach((charm, charmIndex) => {
+        const charmSet = document.createElement("div");
+        charmSet.className = "charm-set";
+        const title = document.createElement("h4");
+        title.textContent = `${charm} Charm`;
+        charmSet.appendChild(title);
+
+        // Current Level Selector
+        const currentContainer = document.createElement("div");
+        currentContainer.className = "form-group";
+        const currentLabel = document.createElement("label");
+        currentLabel.textContent = "Current Level";
+        currentContainer.appendChild(currentLabel);
+        const currentSelect = document.createElement("select");
+        currentSelect.className = `current-level ${charmGearNames[gearIndex].value}-${charmIndex}`;
+        charmLevels.forEach(level => {
+            const option = document.createElement("option");
+            option.value = level.level;
+            option.textContent = `Level ${level.level}`;
+            currentSelect.appendChild(option);
+        });
+        currentContainer.appendChild(currentSelect);
+        charmSet.appendChild(currentContainer);
+
+        // Target Level Selector
+        const targetContainer = document.createElement("div");
+        targetContainer.className = "form-group";
+        const targetLabel = document.createElement("label");
+        targetLabel.textContent = "Target Level";
+        targetContainer.appendChild(targetLabel);
+        const targetSelect = document.createElement("select");
+        targetSelect.className = `target-level ${charmGearNames[gearIndex].value}-${charmIndex}`;
+        charmLevels.forEach(level => {
+            const option = document.createElement("option");
+            option.value = level.level;
+            option.textContent = `Level ${level.level}`;
+            targetSelect.appendChild(option);
+        });
+        targetContainer.appendChild(targetSelect);
+        charmSet.appendChild(targetContainer);
+
+        charmRow.appendChild(charmSet);
+    });
+    gearDiv.appendChild(charmRow);
+    return gearDiv;
+}
+
+function calculateCharms() {
+    let totalGuides = 0, totalDesigns = 0, totalSecrets = 0;
+    let stepsHTML = "";
+    charmGearNames.forEach((gear, gearIndex) => {
+        gear.charms.forEach((charm, charmIndex) => {
+            const currentSelect = document.querySelector(`select.current-level.${gear.value}-${charmIndex}`);
+            const targetSelect = document.querySelector(`select.target-level.${gear.value}-${charmIndex}`);
+            if (!currentSelect || !targetSelect) return;
+            const currentLevel = parseInt(currentSelect.value);
+            const targetLevel = parseInt(targetSelect.value);
+            if (currentLevel >= targetLevel) return;
+
+            const currentIdx = charmLevels.findIndex(l => l.level === currentLevel);
+            const targetIdx = charmLevels.findIndex(l => l.level === targetLevel);
+            if (currentIdx === -1 || targetIdx === -1 || currentIdx >= targetIdx) return;
+
+            for (let i = currentIdx + 1; i <= targetIdx; i++) {
+                totalGuides += charmLevels[i].guides;
+                totalDesigns += charmLevels[i].designs;
+                totalSecrets += charmLevels[i].secrets;
+                stepsHTML += `
+                    <tr>
+                        <td>${gear.label}</td>
+                        <td>${charm}</td>
+                        <td>${charmLevels[i-1].level}</td>
+                        <td>${charmLevels[i].level}</td>
+                        <td>${charmLevels[i].guides}</td>
+                        <td>${charmLevels[i].designs}</td>
+                        <td>${charmLevels[i].secrets > 0 ? charmLevels[i].secrets : "-"}</td>
+                    </tr>`;
+            }
+        });
+    });
+
+    document.getElementById("total-guides").textContent = totalGuides.toLocaleString();
+    document.getElementById("total-designs").textContent = totalDesigns.toLocaleString();
+    document.getElementById("total-secrets").textContent = totalSecrets.toLocaleString();
+    document.getElementById("steps-body-charms").innerHTML = stepsHTML;
+    document.getElementById("charms-result").style.display = "block";
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize charms calculator
+    const charmsContainer = document.getElementById("charms-container");
+    for (let i = 0; i < 6; i++) {
+        charmsContainer.appendChild(createCharmsSelector(i));
+    }
+    document.getElementById("calculate-charms").addEventListener("click", calculateCharms);
+});
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize hero shards calculator
+            updateTierOptions('current-star', 'current-tier', true);
+            updateTierOptions('target-star', 'target-tier');
+            
+            document.getElementById('current-star').addEventListener('change', () => updateTierOptions('current-star', 'current-tier', true));
+            document.getElementById('target-star').addEventListener('change', () => updateTierOptions('target-star', 'target-tier'));
+            document.getElementById('calculate-shards').addEventListener('click', calculateShards);
+
+            // Initialize chief gears calculator
+            const gearContainer = document.getElementById("gears-container");
+            for (let i = 0; i < 6; i++) {
+                gearContainer.appendChild(createGearSelector(i));
+            }
+
+            document.getElementById("calculate-all-gears").addEventListener("click", async () => {
+    const button = document.getElementById("calculate-all-gears");
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
+    
+    try {
+        // Perform calculations
+        const owned = {
+            alloy: parseInt(document.getElementById("owned-alloy")?.value || 0),
+            solution: parseInt(document.getElementById("owned-solution")?.value || 0),
+            design: parseInt(document.getElementById("owned-design")?.value || 0),
+            amber: parseInt(document.getElementById("owned-amber")?.value || 0)
+        };
+        
+        let total = {
+            alloy: 0,
+            solution: 0,
+            design: 0,
+            amber: 0
+        };
+        
+        let allSteps = [];
+        
+        document.querySelectorAll(".gear-block").forEach((block, index) => {
+            const current = block.querySelector(".current-level").value;
+            const target = block.querySelector(".target-level").value;
+            
+            if (current !== target) {
+                const result = calculateGearUpgrade(current, target);
+                total.alloy += result.alloy;
+                total.solution += result.solution;
+                total.design += result.design;
+                total.amber += result.amber;
+                
+                allSteps.push({
+                    name: gearNames[index].label,
+                    steps: result.steps
+                });
+            }
+        });
+        
+        displayGearResults(total, owned, allSteps);
+        
+    } catch (error) {
+        alert("Error in calculation: " + error.message);
+    } finally {
+        button.disabled = false;
+        button.innerHTML = '<i class="fas fa-calculator"></i> Calculate Total Resource Requirements';
+    }
+});
+        });
+    </script>
+</body>
+</html>
