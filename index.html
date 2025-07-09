@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Upgrade Calculator</title>
+    <title>Whiteout Survival Planner</title>
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -529,27 +529,401 @@ select {
 #charms-result tr:nth-child(even) {
     background-color: #f2f2f2;
 }
-/* Keep existing styles for table cells */
+
+/* Map Planner Styles */
+.map-planner-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.map-planner-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.map-planner-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.map-planner-grid {
+    flex: 1;
+    min-width: 400px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.map-planner-controls {
+    width: 400px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+ .map-planner-grid-wrapper {
+            position: relative;
+            overflow: auto;
+            border: 2px solid #34495e;
+            border-radius: 4px;
+            background-color: #2c3e50;
+            height: 600px;
+            width: 100%;
+        }
+        
+        .map-planner-grid {
+            display: grid;
+            background-color: #2c3e50;
+            position: relative;
+            transform-origin: 0 0;
+            transition: transform 0.2s ease;
+            --cell-size: 30px;
+            margin: 0;
+            padding: 0;
+        }
+.map-planner-grid-controls {
+    display: flex;
+    gap: 10px;
+    max-height: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.map-planner-action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+.map-planner-action-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(to right, #3498db, #2980b9);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    min-width: 120px;
+}
+
+.map-planner-action-btn.active {
+    box-shadow: 0 0 0 2px #f1c40f;
+}
+
+.map-planner-action-btn.delete { background: linear-gradient(to right, #e74c3c, #c0392b); }
+.map-planner-action-btn.secondary { background: linear-gradient(to right, #7f8c8d, #95a5a6); }
+.map-planner-action-btn.download { background: linear-gradient(to right, #2ecc71, #27ae60); }
+
+.map-planner-zoom-btn {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.map-planner-grid-cell {
+            background-color: #34495e;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .map-planner-grid-cell.occupied {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .map-planner-grid-object {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            user-select: none;
+            border: 1px solid rgba(255,255,255,0.3);
+            z-index: 2;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.3), 
+                        0 0 0 2px rgba(255,255,255,0.1),
+                        inset 0 0 10px rgba(0,0,0,0.2);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .map-planner-grid-object.placing {
+            pointer-events: none; /* This prevents the preview from blocking clicks */
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+.map-planner-grid-object.selected {
+    border: 2px solid #f1c40f;
+    z-index: 3;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 
+                0 0 0 2px rgba(255,255,255,0.2),
+                inset 0 0 15px rgba(0,0,0,0.3);
+}
+
+.map-planner-object-blue { background: #3498db; }
+.map-planner-object-red { background: #e74c3c; }
+.map-planner-object-green { background: #2ecc71; }
+.map-planner-object-purple { background: #9b59b6; }
+.map-planner-object-orange { background: #e67e22; }
+.map-planner-object-custom { background: #3498db; }
+
+.map-planner-control-group {
+    margin-bottom: 10px;
+    background: rgba(0,0,0,0.1);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.map-planner-form-group {
+    margin-bottom: 15px;
+}
+
+.map-planner-color-options {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.map-planner-color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.map-planner-color-option.selected {
+    border-color: white;
+}
+
+.map-planner-custom-color-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.map-planner-custom-color-label {
+    white-space: nowrap;
+}
+
+.map-planner-custom-color-input {
+    width: 60px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+}
+
+.map-planner-selection-info {
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    height: 150px;
+}
+
+.map-planner-multi-select-info {
+    margin-top: 10px;
+    font-style: italic;
+    color: #f1c40f;
+}
+
+.map-planner-stats-panel {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    display: flex; /* Use flexbox to align items */
+    flex-direction: row; /* Arrange in one line */
+    justify-content: space-between; /* Space them evenly */
+    align-items: center; /* Vertically center the items */
+}
+
+.map-planner-stats-panel p {
+    margin: 0; /* Remove default margin to avoid extra spacing */
+    display: flex;
+    align-items: center;
+}
+.map-planner-stats-panel .label {
+    color: #bdc3c7; /* Light gray for labels to distinguish from values */
+    font-weight: normal; /* Ensure labels are not bold */
+    margin-right: 5px; /* Add some space between label and value */
+}
+.map-planner-stats-panel span {
+    font-weight: bold;
+    color: #f1c40f;
+}
+.tutorial-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #ddd;
+}
+
+.tutorial-section h4 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.tutorial-section h4:before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: var(--secondary-color);
+    margin-right: 10px;
+}
+
+.tutorial-section ol, .tutorial-section ul {
+    margin-left: 25px;
+    margin-bottom: 15px;
+}
+
+.tutorial-section li {
+    margin-bottom: 8px;
+}
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css ">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Game Upgrade Calculator</h1>
-            <p>Calculate resources needed for your hero and base upgrades</p>
+            <h1>Whiteout Survival Planner</h1>
+            <p>Plan and calculate upgrades needed for your hero and base upgrades</p>
         </header>
         <nav>
             <ul>
-                <li class="active"><a href="#" data-section="hero-shards"><i class="fas fa-star"></i> Hero Shards</a></li>
-                <li><a href="#" data-section="chief-gears"><i class="fas fa-helmet-battle"></i> Chief Gears</a></li>
+                <li class="active"><a href="#" data-section="introduction"><i class="fas fa-info"></i> Introduction</a></li>
+                <li><a href="#" data-section="hero-shards"><i class="fas fa-star"></i> Hero Shards</a></li>
+                <li><a href="#" data-section="chief-gears"><i class="fas fa-cogs"></i> Chief Gears</a></li>
                 <li><a href="#" data-section="chief-charms"><i class="fas fa-gem"></i> Chief Charms</a></li>
-                <li><a href="#" data-section="building-upgrades"><i class="fas fa-building"></i> Building Upgrades</a></li>
+                <li><a href="#" data-section="map-planner"><i class="fas fa-map"></i> Map Planner</a></li>
             </ul>
         </nav>
+        <section id="introduction" class="calculator-section active">
+    <h2><i class="fas fa-info-circle"></i> Welcome to Whiteout Survival Planner</h2>
+    
+    <div class="calculator-grid">
+        <div>
+            <h3 style="color: var(--secondary-color); margin-bottom: 15px;">About This Tool</h3>
+            <p>This planner helps you optimize your Whiteout Survival gameplay with four powerful calculators:</p>
+            <ol style="margin-left: 20px; margin-bottom: 20px;">
+                <li><strong>Hero Shards Calculator</strong> - Plan your hero upgrades</li>
+                <li><strong>Chief Gears Calculator</strong> - Track gear upgrade costs</li>
+                <li><strong>Chief Charms Calculator</strong> - Manage charm resources</li>
+                <li><strong>Map Planner</strong> - Design your base layout</li>
+            </ol>
+            
+            <div class="gear-block" style="background-color: #e8f4f8;">
+                <p>Use the navigation bar above to switch between tools. All calculations are performed in real-time!</p>
+            </div>
+        </div>
+        
+        <div>
+    <h3 style="color: var(--secondary-color); margin-bottom: 15px;">Mobile Users: Use Desktop View</h3>
+    <p><strong>Purpose:</strong> Some tools (like the Map Planner) require mouse and keyboard inputs which may not work well on mobile browsers.</p>
+    <p><strong>How to use:</strong></p>
+    <ol style="margin-left: 20px; margin-bottom: 20px;">
+        <li>Tap the <strong>browser menu</strong> (usually three dots in the top/right corner)</li>
+        <li>Select <strong>"Request desktop site"</strong> or <strong>"Desktop version"</strong></li>
+        <li>Reload the page to load the full desktop version of this planner</li>
+    </ol>
+    <div class="gear-block" style="background-color: #e8f4f8;">
+    <p>
+    For best experience, use this planner on desktop or enable "Desktop Site" on mobile.
+    </p>
+    </div>
+
+</div>
+    </div>
+    
+    
+    <div class="requirements-table">
+        <h3><i class="fas fa-graduation-cap"></i>Tutorials</h3>
+        
+        <div class="tutorial-section">
+            <h4>1. Hero Shards Calculator</h4>
+            <p><strong>Purpose:</strong> Calculate exactly how many shards you need to upgrade your heroes.</p>
+            <p><strong>How to use:</strong></p>
+            <ol>
+                <li>Select your hero's current star level and tier</li>
+                <li>Choose your target star level and tier</li>
+                <li>(Optional) Enter how many shards you already have</li>
+                <li>Click "Calculate Required Shards"</li>
+            </ol>
+            <p>The results will show total shards needed and a detailed breakdown of requirements for each star level.</p>
+        </div>
+        
+        <div class="tutorial-section">
+            <h4>2. Chief Gears Calculator</h4>
+            <p><strong>Purpose:</strong> Plan resource requirements for upgrading all 6 chief gears.</p>
+            <p><strong>How to use:</strong></p>
+            <ol>
+                <li>For each gear, select current and target levels</li>
+                <li>(Optional) Enter your current resources</li>
+                <li>Click "Calculate Total Resource Requirements"</li>
+            </ol>
+            <p>View total materials needed and a step-by-step upgrade path for each gear.</p>
+        </div>
+        
+        <div class="tutorial-section">
+            <h4>3. Chief Charms Calculator</h4>
+            <p><strong>Purpose:</strong> Track charm upgrades across all gear pieces.</p>
+            <p><strong>How to use:</strong></p>
+            <ol>
+                <li>For each charm slot (3 per gear), set current and target levels</li>
+                <li>Click "Calculate Resource Requirements"</li>
+            </ol>
+            <p>Get totals for Charm Guides, Designs, and Jewel Secrets needed for your upgrades.</p>
+        </div>
+        
+        <div class="tutorial-section">
+            <h4>4. Map Planner</h4>
+            <p><strong>Purpose:</strong> Design and optimize your base layout before building in-game.</p>
+            <p><strong>How to use:</strong></p>
+            <ol>
+                <li><strong>Place Objects:</strong> Click to add buildings of any size</li>
+                <li><strong>Customize:</strong> Adjust width/height, colors, and labels</li>
+                <li><strong>Edit:</strong> Select objects to move/delete them</li>
+                <li><strong>Multi-select:</strong> Hold Shift to select multiple objects</li>
+                <li><strong>Download:</strong> Save your layout as an image</li>
+            </ol>
+            <p>Key Features:</p>
+            <ul>
+                <li>Zoom in/out to see details</li>
+                <li>Real-time utilization statistics</li>
+                <li>Color-coding for different building types</li>
+                <li>Custom grid sizes (up to 1000x1000)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="note" style="background-color: #f8f9fa; padding: 15px; border-radius: 8px;">
+        <h4 style="color: var(--primary-color); margin-bottom: 10px;">Need Help?</h4>
+        <p>Hover over <i class="fas fa-question-circle" style="color: var(--accent-color);"></i> icons for tooltips. For mobile users, note that multi-selection requires holding Shift (may not work on touch devices).</p>
+        <p style="margin-top: 10px; font-weight: bold;">Bookmark this page to save your plans!</p>
+    </div>
+</section>
 
         <!-- Hero Shards Calculator -->
-        <section id="hero-shards" class="calculator-section active">
+        <section id="hero-shards" class="calculator-section">
             <h2><i class="fas fa-star"></i> Hero Shards Calculator</h2>
             <div class="calculator-grid">
                 <div>
@@ -711,7 +1085,7 @@ select {
 
         <!-- Chief Gears Calculator -->
 <section id="chief-gears" class="calculator-section">
-    <h2><i class="fas fa-helmet-battle"></i> Chief Gears Calculator</h2>
+    <h2><i class="fas fa-cogs"></i> Chief Gears Calculator</h2>
 
      <p>Select current and target levels for each of the 6 gears below:</p>
     <div id="gears-container"></div>
@@ -925,12 +1299,92 @@ select {
 </div>
 </section>
 
-        <!-- Building Upgrades Calculator -->
-        <section id="building-upgrades" class="calculator-section">
-            <div class="coming-soon">
-                <i class="fas fa-building"></i>
-                <h3>Building Upgrades Calculator</h3>
-                <p>Coming soon!</p>
+        <!-- Map Planner Section -->
+        <section id="map-planner" class="calculator-section">
+        <h2><i class="fas fa-map"></i> Map Planner</h2>
+        <div class="map-planner-container">
+            <div class="map-planner-content">
+                <div class="map-planner-grid" style="background-color: white; box-shadow: 0 0 0;">
+                    <div class="map-planner-action-buttons">
+                        <button class="map-planner-action-btn" id="map-place-btn">Place Object</button>
+                        <button class="map-planner-action-btn" id="map-place-single-btn">Place Single Object</button>
+                        <button class="map-planner-action-btn delete" id="map-delete-btn">Delete Selected</button>
+                        <button class="map-planner-action-btn secondary" id="map-clear-btn">Clear All</button>
+                        <button class="map-planner-action-btn download" id="map-download-btn">Download</button>
+                        <button class="map-planner-action-btn secondary" id="map-multi-select-btn">Multi-Select</button>
+                    </div>
+                    <div class="map-planner-grid-wrapper" id="map-grid-wrapper">
+                        <div class="map-planner-grid" id="map-grid"></div>
+                    </div>
+                    <div class="map-planner-grid-controls">
+                        <button class="map-planner-zoom-btn" id="map-zoom-in-btn" style="background-color: grey;">Zoom In (+)</button>
+                        <button class="map-planner-zoom-btn" id="map-zoom-out-btn" style="background-color: grey;">Zoom Out (-)</button>
+                        <button class="map-planner-zoom-btn" id="map-zoom-reset-btn" style="background-color: grey;">Reset Zoom</button>
+                    </div>
+                    <div class="map-planner-stats-panel" style="background-color: rgb(57, 57, 57);">
+                        <p><span class="label">Total Objects:</span> <span id="map-total-objects">5</span></p>
+                        <p><span class="label">Grid Size:</span> <span id="map-grid-size">10×10</span></p>
+                        <p><span class="label">Grid Utilization:</span> <span id="map-grid-utilization">19%</span></p>
+                    </div>
+                    <div>
+                        <h2 style="text-align: center; color: white; background-image: linear-gradient(to right, rgb(63, 129, 172), rgb(64, 46, 119), rgb(37, 199, 239)); margin-top: 5px; border-radius: 10px; width: 100%;">WHITEOUT SURVIVAL MAP PLANNER</h2>
+                    </div>
+                    <div>
+                        <p style="color: red; text-align: center; font-style: italic;">Note - Multi- Selection of the object won't work on mobile.</p>
+                    </div>
+                </div>
+                    <div class="map-planner-controls">
+                        <div class="map-planner-control-group">
+                            <h3>Current Selection</h3>
+                            <div class="map-planner-selection-info" id="map-selection-info">No object selected</div>
+                            <div class="map-planner-multi-select-info" id="map-multi-select-info" style="display: none; color: red; font-weight: bolder;">Multi-select mode: Hold Shift to select multiple objects</div>
+                        </div>
+                        
+                        <div class="map-planner-control-group">
+                            <h3>Object Settings</h3>
+                            <div class="map-planner-form-group">
+                                <label for="map-obj-width">Width (cells):</label>
+                                <input type="number" id="map-obj-width" min="1" max="10" value="2">
+                            </div>
+                            <div class="map-planner-form-group">
+                                <label for="map-obj-height">Height (cells):</label>
+                                <input type="number" id="map-obj-height" min="1" max="10" value="2">
+                            </div>
+                            <div class="map-planner-form-group">
+                                <label>Color:</label>
+                                <div class="map-planner-color-options">
+                                    <div class="map-planner-color-option selected" style="background: #3498db;" data-color="blue"></div>
+                                    <div class="map-planner-color-option" style="background: #e74c3c;" data-color="red"></div>
+                                    <div class="map-planner-color-option" style="background: #2ecc71;" data-color="green"></div>
+                                    <div class="map-planner-color-option" style="background: #9b59b6;" data-color="purple"></div>
+                                    <div class="map-planner-color-option" style="background: #e67e22;" data-color="orange"></div>
+                                </div>
+                                <div class="map-planner-custom-color-container">
+                                    <span class="map-planner-custom-color-label">Custom Color:</span>
+                                    <div class="map-planner-color-option" style="background: #3498db;" data-color="custom"></div>
+                                    <input type="color" class="map-planner-custom-color-input" id="map-custom-color-input" value="#3498db">
+                                </div>
+                            </div>
+                            <div class="map-planner-form-group">
+                                <label for="map-obj-label">Label (optional):</label>
+                                <input type="text" id="map-obj-label" placeholder="Object label">
+                            </div>
+                        </div>
+                        
+                        <div class="map-planner-control-group">
+                            <h3>Grid Settings</h3>
+                            <div class="map-planner-form-group">
+                                <label for="map-grid-cols">Columns:</label>
+                                <input type="number" id="map-grid-cols" min="15" max="1000" value="22">
+                            </div>
+                            <div class="map-planner-form-group">
+                                <label for="map-grid-rows">Rows:</label>
+                                <input type="number" id="map-grid-rows" min="15" max="1000" value="20">
+                            </div>
+                            <button class="btn" id="map-update-grid-btn">Update Grid</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
@@ -1391,31 +1845,717 @@ function calculateCharms() {
     document.getElementById("charms-result").style.display = "block";
 }
 
+// --- MAP PLANNER LOGIC ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize charms calculator
-    const charmsContainer = document.getElementById("charms-container");
-    for (let i = 0; i < 6; i++) {
-        charmsContainer.appendChild(createCharmsSelector(i));
-    }
-    document.getElementById("calculate-charms").addEventListener("click", calculateCharms);
-});
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize hero shards calculator
-            updateTierOptions('current-star', 'current-tier', true);
-            updateTierOptions('target-star', 'target-tier');
+            // Initialize the map planner when the section is loaded
+            const mapGridWrapper = document.getElementById('map-grid-wrapper');
+            const mapGrid = document.getElementById('map-grid');
+            const mapGridColsInput = document.getElementById('map-grid-cols');
+            const mapGridRowsInput = document.getElementById('map-grid-rows');
+            const mapUpdateGridBtn = document.getElementById('map-update-grid-btn');
+            const mapObjWidthInput = document.getElementById('map-obj-width');
+            const mapObjHeightInput = document.getElementById('map-obj-height');
+            const mapObjLabelInput = document.getElementById('map-obj-label');
+            const mapPlaceBtn = document.getElementById('map-place-btn');
+            const mapPlaceSingleBtn = document.getElementById('map-place-single-btn');
+            const mapDeleteBtn = document.getElementById('map-delete-btn');
+            const mapClearBtn = document.getElementById('map-clear-btn');
+            const mapDownloadBtn = document.getElementById('map-download-btn');
+            const mapMultiSelectBtn = document.getElementById('map-multi-select-btn');
+            const mapColorOptions = document.querySelectorAll('.map-planner-color-option');
+            const mapCustomColorInput = document.getElementById('map-custom-color-input');
+            const mapSelectionInfo = document.getElementById('map-selection-info');
+            const mapMultiSelectInfo = document.getElementById('map-multi-select-info');
+            const mapZoomInBtn = document.getElementById('map-zoom-in-btn');
+            const mapZoomOutBtn = document.getElementById('map-zoom-out-btn');
+            const mapZoomResetBtn = document.getElementById('map-zoom-reset-btn');
+            const mapTotalObjectsSpan = document.getElementById('map-total-objects');
+            const mapGridSizeSpan = document.getElementById('map-grid-size');
+            const mapGridUtilizationSpan = document.getElementById('map-grid-utilization');
             
-            document.getElementById('current-star').addEventListener('change', () => updateTierOptions('current-star', 'current-tier', true));
-            document.getElementById('target-star').addEventListener('change', () => updateTierOptions('target-star', 'target-tier'));
-            document.getElementById('calculate-shards').addEventListener('click', calculateShards);
+            // Constants
+            const CELL_SIZE = 30; // Fixed cell size in pixels
+            let gridCols = 22;
+            let gridRows = 20;
+            let objWidth = 2;
+            let objHeight = 2;
+            let selectedColor = 'blue';
+            let customColor = '#3498db';
+            let objects = [];
+            let selectedObjects = [];
+            let isPlacing = false;
+            let isSinglePlacement = false;
+            let isMultiSelect = false;
+            let placingObject = null;
+            let currentZoom = 1;
+            
+            // Initialize
+            initializeMapGrid();
+            setupMapEventListeners();
+            
+            function initializeMapGrid() {
+                gridCols = parseInt(mapGridColsInput.value);
+                gridRows = parseInt(mapGridRowsInput.value);
+                
+                // Set grid dimensions (fixed cell size)
+                mapGrid.style.gridTemplateColumns = `repeat(${gridCols}, ${CELL_SIZE}px)`;
+                mapGrid.style.gridTemplateRows = `repeat(${gridRows}, ${CELL_SIZE}px)`;
+                mapGrid.style.width = `${gridCols * CELL_SIZE}px`;
+                mapGrid.style.height = `${gridRows * CELL_SIZE}px`;
+                
+                // Update grid size display
+                mapGridSizeSpan.textContent = `${gridCols}×${gridRows}`;
+                
+                // Reset zoom
+                currentZoom = 1;
+                mapGrid.style.transform = `scale(${currentZoom})`;
+                
+                // Create grid cells
+                mapGrid.innerHTML = '';
+                for (let i = 0; i < gridRows; i++) {
+                    for (let j = 0; j < gridCols; j++) {
+                        const cell = document.createElement('div');
+                        cell.classList.add('map-planner-grid-cell');
+                        cell.dataset.row = i;
+                        cell.dataset.col = j;
+                        cell.style.margin = '0';
+                        cell.style.padding = '0';
+                        mapGrid.appendChild(cell);
+                    }
+                }
+                mapGridWrapper.scrollTo(0, 0);
 
-            // Initialize chief gears calculator
-            const gearContainer = document.getElementById("gears-container");
-            for (let i = 0; i < 6; i++) {
-                gearContainer.appendChild(createGearSelector(i));
+                // Center the grid in the view
+                centerMapGrid();
+                
+                // Update stats
+                updateMapStats();
             }
+            
+            function centerMapGrid() {
+                mapGridWrapper.scrollTo(
+                    (gridCols * CELL_SIZE * currentZoom - mapGridWrapper.clientWidth) / 2,
+                    (gridRows * CELL_SIZE * currentZoom - mapGridWrapper.clientHeight) / 2
+                );
+            }
+            
+            function setupMapEventListeners() {
+                // Grid configuration
+                mapUpdateGridBtn.addEventListener('click', () => {
+                    initializeMapGrid();
+                    objects = [];
+                    selectedObjects = [];
+                    updateMapSelectionInfo();
+                    updateMapStats();
+                });
+                
+                // Object placement mode - toggles placement mode
+                mapPlaceBtn.addEventListener('click', toggleMapPlacementMode);
+                
+                // Single object placement mode
+                mapPlaceSingleBtn.addEventListener('click', toggleMapSinglePlacementMode);
+                
+                // Multi-select mode
+                mapMultiSelectBtn.addEventListener('click', () => {
+                    isMultiSelect = !isMultiSelect;
+                    mapMultiSelectBtn.classList.toggle('active', isMultiSelect);
+                    mapMultiSelectInfo.style.display = isMultiSelect ? 'block' : 'none';
+                    
+                    // Clear selection if exiting multi-select
+                    if (!isMultiSelect && selectedObjects.length > 1) {
+                        clearMapSelection();
+                    }
+                });
+                
+                // Color selection
+                mapColorOptions.forEach(option => {
+                    option.addEventListener('click', () => {
+                        mapColorOptions.forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        selectedColor = option.dataset.color;
+                        
+                        // If custom color is selected, update the preview
+                        if (selectedColor === 'custom') {
+                            const customOption = document.querySelector('.map-planner-color-option[data-color="custom"]');
+                            customOption.style.backgroundColor = customColor;
+                        }
+                        
+                        // Update placing object color if exists
+                        if (placingObject) {
+                            updateMapPlacingObjectColor();
+                        }
+                        
+                        // Update selected objects color if they exist
+                        if (selectedObjects.length > 0) {
+                            updateMapSelectedObjectsColor();
+                        }
+                    });
+                });
+                
+                // Custom color input
+                mapCustomColorInput.addEventListener('input', (e) => {
+                    customColor = e.target.value;
+                    if (selectedColor === 'custom') {
+                        const customOption = document.querySelector('.map-planner-color-option[data-color="custom"]');
+                        customOption.style.backgroundColor = customColor;
+                        
+                        if (placingObject) {
+                            updateMapPlacingObjectColor();
+                        }
+                        
+                        if (selectedObjects.length > 0) {
+                            updateMapSelectedObjectsColor();
+                        }
+                    }
+                });
+                
+                // Object deletion
+                mapDeleteBtn.addEventListener('click', deleteMapSelectedObjects);
+                
+                // Clear all objects
+                mapClearBtn.addEventListener('click', () => {
+                    objects.forEach(obj => obj.element.remove());
+                    objects = [];
+                    selectedObjects = [];
+                    updateMapSelectionInfo();
+                    updateMapOccupiedCells();
+                    updateMapStats();
+                });
+                
+                // Download grid
+                mapDownloadBtn.addEventListener('click', downloadMapFullGrid);
+                
+                // Zoom controls
+                mapZoomInBtn.addEventListener('click', () => {
+                    currentZoom = Math.min(currentZoom + 0.1, 2);
+                    mapGrid.style.transform = `scale(${currentZoom})`;
+                    centerMapGrid();
+                });
+                
+                mapZoomOutBtn.addEventListener('click', () => {
+                    currentZoom = Math.max(currentZoom - 0.1, 0.5);
+                    mapGrid.style.transform = `scale(${currentZoom})`;
+                    centerMapGrid();
+                });
+                
+                mapZoomResetBtn.addEventListener('click', () => {
+                    currentZoom = 1;
+                    mapGrid.style.transform = `scale(${currentZoom})`;
+                    centerMapGrid();
+                });
+                
+                // Grid interaction
+                mapGrid.addEventListener('mousedown', handleMapGridMouseDown);
+                
+                // Update placing object when dimensions change
+                mapObjWidthInput.addEventListener('input', updateMapPlacingObject);
+                mapObjHeightInput.addEventListener('input', updateMapPlacingObject);
+                mapObjLabelInput.addEventListener('input', updateMapPlacingObject);
+            }
+            
+            function toggleMapPlacementMode() {
+                // If we're already in placement mode, turn it off
+                if (isPlacing) {
+                    isPlacing = false;
+                    mapPlaceBtn.classList.remove('active');
+                    if (placingObject) {
+                        placingObject.remove();
+                        placingObject = null;
+                    }
+                    return;
+                }
+                
+                // Turn off single placement if active
+                if (isSinglePlacement) {
+                    isSinglePlacement = false;
+                    mapPlaceSingleBtn.classList.remove('active');
+                }
+                
+                // Turn on placement mode
+                isPlacing = true;
+                mapPlaceBtn.classList.add('active');
+                createMapPlacingObject();
+            }
+            
+            function toggleMapSinglePlacementMode() {
+                // If we're already in single placement mode, turn it off
+                if (isSinglePlacement) {
+                    isSinglePlacement = false;
+                    mapPlaceSingleBtn.classList.remove('active');
+                    if (placingObject) {
+                        placingObject.remove();
+                        placingObject = null;
+                    }
+                    return;
+                }
+                
+                // Turn off regular placement if active
+                if (isPlacing) {
+                    isPlacing = false;
+                    mapPlaceBtn.classList.remove('active');
+                }
+                
+                // Turn on single placement mode
+                isSinglePlacement = true;
+                mapPlaceSingleBtn.classList.add('active');
+                createMapPlacingObject();
+            }
+            
+            function updateMapPlacingObjectColor() {
+                if (!placingObject) return;
+                
+                // Remove all color classes
+                placingObject.className = 'map-planner-grid-object placing';
+                placingObject.style.backgroundColor = '';
+                
+                if (selectedColor === 'custom') {
+                    placingObject.style.backgroundColor = customColor;
+                } else {
+                    placingObject.classList.add(`map-planner-object-${selectedColor}`);
+                }
+            }
+            
+            function updateMapSelectedObjectsColor() {
+                selectedObjects.forEach(object => {
+                    // Remove all color classes
+                    object.className = 'map-planner-grid-object';
+                    if (object.classList.contains('selected')) {
+                        object.classList.add('selected');
+                    }
+                    object.style.backgroundColor = '';
+                    
+                    // Update object data and appearance
+                    const objData = objects.find(obj => obj.element === object);
+                    if (objData) {
+                        if (selectedColor === 'custom') {
+                            object.style.backgroundColor = customColor;
+                            objData.color = customColor;
+                        } else {
+                            object.classList.add(`map-planner-object-${selectedColor}`);
+                            objData.color = selectedColor;
+                        }
+                    }
+                });
+            }
+            
+            function updateMapPlacingObject() {
+                if (!placingObject) return;
+                
+                objWidth = parseInt(mapObjWidthInput.value);
+                objHeight = parseInt(mapObjHeightInput.value);
+                const label = mapObjLabelInput.value.trim() || `${objWidth}×${objHeight}`;
+                placingObject.textContent = label;
+                
+                // Update size
+                const objectWidth = objWidth * CELL_SIZE;
+                const objectHeight = objHeight * CELL_SIZE;
+                placingObject.style.width = `${objectWidth}px`;
+                placingObject.style.height = `${objectHeight}px`;
+            }
+            
+            function handleMapGridMouseDown(e) {
+                const cell = e.target.closest('.map-planner-grid-cell');
+                const clickedObject = e.target.closest('.map-planner-grid-object');
+                
+                // Check if we're placing a new object
+                if ((isPlacing || isSinglePlacement) && cell) {
+                    // Remove the preview object temporarily during placement
+                    if (placingObject) {
+                        placingObject.remove();
+                    }
+                    objWidth = parseInt(mapObjWidthInput.value);
+                    objHeight = parseInt(mapObjHeightInput.value);
+                    const row = parseInt(cell.dataset.row);
+                    const col = parseInt(cell.dataset.col);
+                    
+                    if (canPlaceMapObject(row, col, objWidth, objHeight)) {
+                        placeMapNewObject(row, col, objWidth, objHeight);
+                        
+                        // If in single placement mode, exit after placing
+                        if (isSinglePlacement) {
+                            isSinglePlacement = false;
+                            mapPlaceSingleBtn.classList.remove('active');
+                            if (placingObject) {
+                                placingObject.remove();
+                                placingObject = null;
+                            }
+                        }
+                    else if (isPlacing) {
+                            // Restore the preview object if we're still in placement mode
+                            createMapPlacingObject();
+                        }
+                    } else if (isPlacing) {
+                        // Restore the preview object if placement failed
+                        createMapPlacingObject();
+                    }
+                    return;
+                }
+                
+                // Check if we clicked on an object
+                if (clickedObject) {
+                    e.preventDefault();
+                    
+                    // Handle selection (with or without shift key)
+                    if (!e.shiftKey || !isMultiSelect) {
+                        clearMapSelection();
+                    }
+                    
+                    selectMapObject(clickedObject, !e.shiftKey);
+                    return;
+                }
+                
+                // Clicked on empty space - deselect if not in multi-select mode
+                if (!isMultiSelect || !e.shiftKey) {
+                    clearMapSelection();
+                }
+            }
+            
+            function clearMapSelection() {
+                selectedObjects.forEach(obj => obj.classList.remove('selected'));
+                selectedObjects = [];
+                updateMapSelectionInfo();
+            }
+            
+            function selectMapObject(object, singleSelect = true) {
+                if (singleSelect && selectedObjects.length > 0 && !selectedObjects.includes(object)) {
+                    clearMapSelection();
+                }
+                
+                if (!selectedObjects.includes(object)) {
+                    selectedObjects.push(object);
+                    object.classList.add('selected');
+                    updateMapSelectionInfo();
+                } else if (isMultiSelect) {
+                    // Deselect if already selected in multi-select mode
+                    const index = selectedObjects.indexOf(object);
+                    if (index !== -1) {
+                        selectedObjects.splice(index, 1);
+                        object.classList.remove('selected');
+                        updateMapSelectionInfo();
+                    }
+                }
+            }
+            
+            function updateMapSelectionInfo() {
+                if (selectedObjects.length === 0) {
+                    mapSelectionInfo.textContent = "No object selected";
+                    return;
+                }
+                
+                if (selectedObjects.length > 1) {
+                    mapSelectionInfo.innerHTML = `
+                        <strong>${selectedObjects.length} objects selected</strong><br>
+                        Hold Shift to add/remove from selection
+                    `;
+                    return;
+                }
+                
+                const object = selectedObjects[0];
+                const objData = objects.find(obj => obj.element === object);
+                if (objData) {
+                    mapSelectionInfo.innerHTML = `
+                        <strong>Selected Object:</strong><br>
+                        Position: (${objData.col}, ${objData.row})<br>
+                        Size: ${objData.width}×${objData.height}<br>
+                        Color: ${objData.color}<br>
+                        ${objData.label ? `Label: ${objData.label}` : ''}
+                    `;
+                }
+            }
+            
+            function createMapPlacingObject() {
+                if (placingObject) {
+                    placingObject.remove();
+                }
+                
+                placingObject = document.createElement('div');
+                placingObject.classList.add('map-planner-grid-object', 'placing');
+                
+                // Set color
+                if (selectedColor === 'custom') {
+                    placingObject.style.backgroundColor = customColor;
+                } else {
+                    placingObject.classList.add(`map-planner-object-${selectedColor}`);
+                }
+                
+                const label = mapObjLabelInput.value.trim() || `${mapObjWidthInput.value}×${mapObjHeightInput.value}`;
+                placingObject.textContent = label;
+                
+                // Set initial size
+                const objectWidth = objWidth * CELL_SIZE;
+                const objectHeight = objHeight * CELL_SIZE;
+                placingObject.style.width = `${objectWidth}px`;
+                placingObject.style.height = `${objectHeight}px`;
 
-            document.getElementById("calculate-all-gears").addEventListener("click", async () => {
+                // Position off-screen
+                placingObject.style.left = `-${objectWidth}px`;
+                placingObject.style.top = `-${objectHeight}px`;
+                
+                mapGrid.appendChild(placingObject);
+            }
+            
+            function placeMapNewObject(row, col, width, height) {
+                const object = document.createElement('div');
+                object.classList.add('map-planner-grid-object');
+                
+                // Set color
+                if (selectedColor === 'custom') {
+                    object.style.backgroundColor = customColor;
+                } else {
+                    object.classList.add(`map-planner-object-${selectedColor}`);
+                }
+                
+                const label = mapObjLabelInput.value.trim() || `${width}×${height}`;
+                object.textContent = label;
+                
+                // Store object data
+                const objData = {
+                    element: object,
+                    row,
+                    col,
+                    width,
+                    height,
+                    color: selectedColor === 'custom' ? customColor : selectedColor,
+                    label
+                };
+                
+                objects.push(objData);
+                mapGrid.appendChild(object);
+                positionMapObject(object, row, col, width, height);
+                
+                // Mark cells as occupied
+                updateMapOccupiedCells();
+                
+                // Update the placing object preview
+                if (placingObject) {
+                    placingObject.remove();
+                    placingObject = null;
+                    if (isPlacing) {
+                        createMapPlacingObject();
+                    }
+                }
+                
+                // Select the new object
+                clearMapSelection();
+                selectMapObject(object);
+                
+                // Update stats
+                updateMapStats();
+            }
+            
+            function positionMapObject(object, row, col, width, height) {
+                // Calculate exact pixel positions
+                const left = col * CELL_SIZE;
+                const top = row * CELL_SIZE;
+                
+                // Ensure the object stays within grid bounds
+                const maxLeft = (gridCols - width) * CELL_SIZE;
+                const maxTop = (gridRows - height) * CELL_SIZE;
+                
+                const clampedLeft = Math.min(left, maxLeft);
+                const clampedTop = Math.min(top, maxTop);
+                
+                object.style.width = `${width * CELL_SIZE}px`;
+                object.style.height = `${height * CELL_SIZE}px`;
+                object.style.left = `${clampedLeft}px`;
+                object.style.top = `${clampedTop}px`;
+            }
+            
+            function updateMapOccupiedCells() {
+                // Clear all occupied cells first
+                document.querySelectorAll('.map-planner-grid-cell.occupied').forEach(cell => {
+                    cell.classList.remove('occupied');
+                });
+                
+                // Mark cells occupied by objects
+                objects.forEach(obj => {
+                    for (let r = obj.row; r < obj.row + obj.height; r++) {
+                        for (let c = obj.col; c < obj.col + obj.width; c++) {
+                            const cell = mapGrid.querySelector(`.map-planner-grid-cell[data-row="${r}"][data-col="${c}"]`);
+                            if (cell) cell.classList.add('occupied');
+                        }
+                    }
+                });
+            }
+            
+            function canPlaceMapObject(row, col, width, height) {
+                // Check boundaries
+                if (row < 0 || col < 0 || 
+                    row + height > gridRows || 
+                    col + width > gridCols) {
+                    return false;
+                }
+                
+                // Check for collisions
+                for (let r = row; r < row + height; r++) {
+                    for (let c = col; c < col + width; c++) {
+                        const cell = mapGrid.querySelector(`.map-planner-grid-cell[data-row="${r}"][data-col="${c}"]`);
+                        if (cell && cell.classList.contains('occupied')) {
+                            return false;
+                        }
+                    }
+                }
+                
+                return true;
+            }
+            
+            function deleteMapSelectedObjects() {
+                if (selectedObjects.length === 0) return;
+                
+                // Remove all selected objects
+                selectedObjects.forEach(object => {
+                    const index = objects.findIndex(obj => obj.element === object);
+                    if (index !== -1) {
+                        object.remove();
+                        objects.splice(index, 1);
+                    }
+                });
+                
+                // Update occupied cells
+                updateMapOccupiedCells();
+                
+                // Clear selection
+                selectedObjects = [];
+                updateMapSelectionInfo();
+                
+                // Update stats
+                updateMapStats();
+            }
+            
+            function downloadMapFullGrid() {
+                // Create a canvas element
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Set canvas dimensions (without zoom)
+                canvas.width = gridCols * CELL_SIZE;
+                canvas.height = gridRows * CELL_SIZE;
+                
+                // Draw grid background
+                ctx.fillStyle = '#2c3e50';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw grid cells
+                ctx.fillStyle = '#34495e';
+                for (let i = 0; i < gridRows; i++) {
+                    for (let j = 0; j < gridCols; j++) {
+                        ctx.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE - 1, CELL_SIZE - 1);
+                    }
+                }
+                
+                // Mark occupied cells
+                objects.forEach(obj => {
+                    for (let r = obj.row; r < obj.row + obj.height; r++) {
+                        for (let c = obj.col; c < obj.col + obj.width; c++) {
+                            ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+                            ctx.fillRect(c * CELL_SIZE, r * CELL_SIZE, CELL_SIZE - 1, CELL_SIZE - 1);
+                        }
+                    }
+                });
+                
+                // Draw objects
+                objects.forEach(obj => {
+                    const left = obj.col * CELL_SIZE;
+                    const top = obj.row * CELL_SIZE;
+                    const width = obj.width * CELL_SIZE;
+                    const height = obj.height * CELL_SIZE;
+                    
+                    // Set color
+                    if (obj.color.startsWith('#')) {
+                        ctx.fillStyle = obj.color;
+                    } else {
+                        // Map color names to hex values
+                        const colorMap = {
+                            'blue': '#3498db',
+                            'red': '#e74c3c',
+                            'green': '#2ecc71',
+                            'purple': '#9b59b6',
+                            'orange': '#e67e22'
+                        };
+                        ctx.fillStyle = colorMap[obj.color] || '#3498db';
+                    }
+                    
+                    // Draw object
+                    ctx.fillRect(left, top, width, height);
+                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(left, top, width, height);
+                    
+                    // Draw shadow effects
+                    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+                    ctx.shadowBlur = 2;
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 0;
+                    
+                    // Draw label if it exists
+                    if (obj.label) {
+                        ctx.font = 'bold 12px Arial';
+                        ctx.fillStyle = 'white';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.shadowColor = 'rgba(0,0,0,0.8)';
+                        ctx.shadowBlur = 2;
+                        ctx.fillText(obj.label, left + width/2, top + height/2);
+                        ctx.shadowColor = 'transparent';
+                    }
+                });
+                
+                // Create download link
+                const link = document.createElement('a');
+                link.download = `grid-map-${new Date().toISOString().slice(0,10)}.png`;
+                link.href = canvas.toDataURL('image/png');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            
+            // Update statistics
+            function updateMapStats() {
+                // Update total objects count
+                mapTotalObjectsSpan.textContent = objects.length;
+                
+                // Calculate grid utilization
+                const totalCells = gridCols * gridRows;
+                let occupiedCells = 0;
+                
+                objects.forEach(obj => {
+                    occupiedCells += obj.width * obj.height;
+                });
+                
+                const utilizationPercentage = totalCells > 0 
+                    ? Math.round((occupiedCells / totalCells) * 100) 
+                    : 0;
+                
+                mapGridUtilizationSpan.textContent = `${utilizationPercentage}%`;
+            }
+            
+            // Initial demo objects
+            setTimeout(() => {
+                placeMapNewObject(1, 1, 2, 2);
+                placeMapNewObject(4, 4, 3, 3);
+                placeMapNewObject(2, 7, 1, 1);
+                placeMapNewObject(7, 1, 1, 1);
+                placeMapNewObject(6, 6, 2, 2);
+            }, 500);
+        });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize hero shards calculator
+    updateTierOptions('current-star', 'current-tier', true);
+    updateTierOptions('target-star', 'target-tier');
+    
+    document.getElementById('current-star').addEventListener('change', () => updateTierOptions('current-star', 'current-tier', true));
+    document.getElementById('target-star').addEventListener('change', () => updateTierOptions('target-star', 'target-tier'));
+    document.getElementById('calculate-shards').addEventListener('click', calculateShards);
+
+    // Initialize chief gears calculator
+    const gearContainer = document.getElementById("gears-container");
+    for (let i = 0; i < 6; i++) {
+        gearContainer.appendChild(createGearSelector(i));
+    }
+
+    document.getElementById("calculate-all-gears").addEventListener("click", async () => {
     const button = document.getElementById("calculate-all-gears");
     button.disabled = true;
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
@@ -1465,7 +2605,14 @@ document.addEventListener('DOMContentLoaded', () => {
         button.innerHTML = '<i class="fas fa-calculator"></i> Calculate Total Resource Requirements';
     }
 });
-        });
+
+    // Initialize charms calculator
+    const charmsContainer = document.getElementById("charms-container");
+    for (let i = 0; i < 6; i++) {
+        charmsContainer.appendChild(createCharmsSelector(i));
+    }
+    document.getElementById("calculate-charms").addEventListener("click", calculateCharms);
+});
     </script>
 </body>
 </html>
