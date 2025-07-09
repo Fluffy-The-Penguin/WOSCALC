@@ -1257,11 +1257,11 @@
                             <h3>Object Settings</h3>
                             <div class="map-planner-form-group">
                                 <label for="map-obj-width">Width (cells):</label>
-                                <input type="number" id="map-obj-width" min="1" max="10" value="2">
+                                <input type="number" id="map-obj-width" min="1" max="1000" value="2">
                             </div>
                             <div class="map-planner-form-group">
                                 <label for="map-obj-height">Height (cells):</label>
-                                <input type="number" id="map-obj-height" min="1" max="10" value="2">
+                                <input type="number" id="map-obj-height" min="1" max="1000" value="2">
                             </div>
                             <div class="map-planner-form-group">
                                 <label>Color:</label>
@@ -1288,11 +1288,11 @@
                             <h3>Grid Settings</h3>
                             <div class="map-planner-form-group">
                                 <label for="map-grid-cols">Columns:</label>
-                                <input type="number" id="map-grid-cols" min="15" max="1000" value="22">
+                                <input type="number" id="map-grid-cols" min="15" max="1000" value="26">
                             </div>
                             <div class="map-planner-form-group">
                                 <label for="map-grid-rows">Rows:</label>
-                                <input type="number" id="map-grid-rows" min="15" max="1000" value="20">
+                                <input type="number" id="map-grid-rows" min="15" max="1000" value="16">
                             </div>
                             <button class="btn" id="map-update-grid-btn">Update Grid</button>
                         </div>
@@ -1788,8 +1788,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Constants
             const CELL_SIZE = 30; // Fixed cell size in pixels
-            let gridCols = 22;
-            let gridRows = 20;
+            let gridCols = 26;
+            let gridRows = 16;
             let objWidth = 2;
             let objHeight = 2;
             let selectedColor = 'blue';
