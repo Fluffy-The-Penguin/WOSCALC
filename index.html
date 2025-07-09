@@ -2474,7 +2474,7 @@ document.addEventListener('DOMContentLoaded', () => {
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
     
     try {
-        // Perform calculations
+        // Safely get owned resources with fallback to 0 if input doesn't exist
         const owned = {
             alloy: parseInt(document.getElementById("owned-alloy")?.value || 0),
             solution: parseInt(document.getElementById("owned-solution")?.value || 0),
@@ -2492,8 +2492,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let allSteps = [];
         
         document.querySelectorAll(".gear-block").forEach((block, index) => {
-            const current = block.querySelector(".current-level").value;
-            const target = block.querySelector(".target-level").value;
+            const currentSelect = block.querySelector(".current-level");
+            const targetSelect = block.querySelector(".target-level");
+            
+            if (!currentSelect || !targetSelect) return;
+            
+            const current = currentSelect.value;
+            const target = targetSelect.value;
             
             if (current !== target) {
                 const result = calculateGearUpgrade(current, target);
@@ -2512,7 +2517,8 @@ document.addEventListener('DOMContentLoaded', () => {
         displayGearResults(total, owned, allSteps);
         
     } catch (error) {
-        alert("Error in calculation: " + error.message);
+        console.error("Error in calculation:", error);
+        alert("Error in calculation. Please check the console for details.");
     } finally {
         button.disabled = false;
         button.innerHTML = '<i class="fas fa-calculator"></i> Calculate Total Resource Requirements';
