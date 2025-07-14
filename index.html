@@ -1480,14 +1480,14 @@
             </div>
             
             <div class="form-group">
-                <label>Additional Speed Bonuses</label>
-                <div class="checkbox-group">
-                    <label><input type="checkbox" id="vice-president" style="width: 20px;"> Vice President (+10%)</label>
-                    <label><input type="checkbox" id="minister-education" style="width: 20px;"> Minister of Education (+50%)</label>
-                    <label><input type="checkbox" id="mobilize" style="width: 20px;"> Mobilize (+30%) (President's Skill)</label>
-                </div>
-                <p style="color: red; font-size: small; font-weight: bolder; font-style: italic;">NOTE: If these bonuses are already active in the game then you don't have to check them because they're already included in the Training Speed Bonus (%)</p>
-            </div>
+    <label>Additional Speed Bonuses</label>
+    <div class="checkbox-group">
+        <label><input type="checkbox" id="vice-president" style="width: 20px;" onchange="toggleBonusCheckboxes('vice-president')"> Vice President (+10%)</label>
+        <label><input type="checkbox" id="minister-education" style="width: 20px;" onchange="toggleBonusCheckboxes('minister-education')"> Minister of Education (+50%)</label>
+        <label><input type="checkbox" id="mobilize" style="width: 20px;"> Mobilize (+30%) (President's Skill)</label>
+    </div>
+    <p style="color: red; font-size: small; font-weight: bolder; font-style: italic;">NOTE: If these bonuses are already active in the game then you don't have to check them because they're already included in the Training Speed Bonus (%)</p>
+</div>
         </div>
     </div>
     
@@ -2331,6 +2331,20 @@ function calculateTroops() {
     document.getElementById('time-after-speedups-with-bonus').textContent = formatTime(timeAfterSpeedupsWithBonus);
     document.getElementById('troops-speedups-no-bonus').textContent = troopsWithSpeedupsNoBonus.toLocaleString();
     document.getElementById('troops-speedups-with-bonus').textContent = troopsWithSpeedupsWithBonus.toLocaleString();
+}
+
+function toggleBonusCheckboxes(checkboxId) {
+    const vicePresident = document.getElementById('vice-president');
+    const ministerEducation = document.getElementById('minister-education');
+    
+    if (checkboxId === 'vice-president' && vicePresident.checked) {
+        ministerEducation.checked = false;
+    } else if (checkboxId === 'minister-education' && ministerEducation.checked) {
+        vicePresident.checked = false;
+    }
+    
+    // Recalculate troops whenever checkbox state changes
+    calculateTroops();
 }
 
 // Populate troop stats table
