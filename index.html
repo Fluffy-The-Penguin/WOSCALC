@@ -1483,7 +1483,7 @@
     <div id="troops-result" class="result" style="display: block;">
     <h3><i class="fas fa-clipboard-check"></i> Calculation Results</h3>
     
-    <div class="calculator-grid">
+     <div class="calculator-grid">
         <div>
             <h4>Resources Required</h4>
             <p>Meat: <span id="meat-required">0</span></p>
@@ -1494,12 +1494,22 @@
         </div>
         
         <div>
-            <h4>Training Time</h4>
+            <h4>Training Times</h4>
             <p>Per Troop: <span id="time-per-troop">0s</span></p>
-            <p>Base Total Time: <span id="base-time-total">0s</span></p>
+            <p>Base Total: <span id="base-time-total">0s</span></p>
             <p>With Bonus: <span id="time-with-bonus">0s</span></p>
-            <p>After Speedups: <span id="time-with-speedups">0s</span></p>
-            <p>Troops with Speedups: <span id="troops-with-speedups">0</span></p>
+        </div>
+        
+        <div>
+            <h4>With Speedups (No Bonus)</h4>
+            <p>Remaining Time: <span id="time-after-speedups-no-bonus">0s</span></p>
+            <p>Troops Trainable: <span id="troops-speedups-no-bonus">0</span></p>
+        </div>
+        
+        <div>
+            <h4>With Speedups (With Bonus)</h4>
+            <p>Remaining Time: <span id="time-after-speedups-with-bonus">0s</span></p>
+            <p>Troops Trainable: <span id="troops-speedups-with-bonus">0</span></p>
         </div>
     </div>
 </div>
@@ -2250,48 +2260,60 @@ function formatTime(seconds) {
     return `${days}d ${remainingHours}h ${remainingMinutes}m ${remainingSeconds}s`;
 }
 
-// Calculate troop training
-// Calculate troop training
 function calculateTroops() {
+    // Get input values
     const troopType = document.getElementById('troop-type').value;
     const tier = parseInt(document.getElementById('troop-tier').value);
     const count = parseInt(document.getElementById('troop-count').value) || 0;
     const speedups = parseInt(document.getElementById('speedups').value) || 0;
-    const bonus = parseInt(document.getElementById('training-bonus').value) || 0;
-    
+    const bonus = parseFloat(document.getElementById('training-bonus').value) || 0;
+
     const troopStats = troopData[troopType].tiers[tier];
     if (!troopStats) return;
-    
+
     // Calculate resources
     const meat = troopStats.meat * count;
     const wood = troopStats.wood * count;
     const coal = troopStats.coal * count;
     const iron = troopStats.iron * count;
     const power = troopStats.power * count;
-    
-    // Calculate time values
+
+    // Time calculations
     const timePerTroop = troopStats.time;
-    const baseTotalTime = timePerTroop * count; // Without any bonuses
-    const timeWithBonus = Math.ceil(baseTotalTime / (1 + bonus/100)); // With training bonus
-    const speedupSeconds = speedups * 60; // Convert minutes to seconds
-    const timeAfterSpeedups = Math.max(0, timeWithBonus - speedupSeconds); // After applying speedups
+    const baseTotalTime = timePerTroop * count;
     
-    // Calculate how many troops can be trained with speedups
-    const timePerTroopWithBonus = Math.ceil(timePerTroop / (1 + bonus/100));
-    const maxTroopsWithSpeedups = Math.floor(speedupSeconds / timePerTroopWithBonus);
-    
-    // Update results
+    // With bonus calculations
+    const speedMultiplier = 1 + (bonus / 100);
+    const timeWithBonus = Math.floor(baseTotalTime / speedMultiplier);
+    const timePerTroopWithBonus = timePerTroop / speedMultiplier;
+
+    // Speedups available (in seconds)
+    const speedupSeconds = speedups * 60;
+
+    // Troops trainable calculations
+    const troopsWithSpeedupsNoBonus = Math.floor(speedupSeconds / timePerTroop);
+    const troopsWithSpeedupsWithBonus = Math.floor(speedupSeconds / timePerTroopWithBonus);
+
+    // Time after speedups
+    const timeAfterSpeedupsNoBonus = Math.max(0, baseTotalTime - speedupSeconds);
+    const timeAfterSpeedupsWithBonus = Math.max(0, timeWithBonus - speedupSeconds);
+
+    // Update results display
     document.getElementById('meat-required').textContent = meat.toLocaleString();
     document.getElementById('wood-required').textContent = wood.toLocaleString();
     document.getElementById('coal-required').textContent = coal.toLocaleString();
     document.getElementById('iron-required').textContent = iron.toLocaleString();
     document.getElementById('power-total').textContent = power.toLocaleString();
-    
+
     document.getElementById('time-per-troop').textContent = formatTime(timePerTroop);
     document.getElementById('base-time-total').textContent = formatTime(baseTotalTime);
     document.getElementById('time-with-bonus').textContent = formatTime(timeWithBonus);
-    document.getElementById('time-with-speedups').textContent = formatTime(timeAfterSpeedups);
-    document.getElementById('troops-with-speedups').textContent = maxTroopsWithSpeedups.toLocaleString();
+    
+    // New displays for speedup comparisons
+    document.getElementById('time-after-speedups-no-bonus').textContent = formatTime(timeAfterSpeedupsNoBonus);
+    document.getElementById('time-after-speedups-with-bonus').textContent = formatTime(timeAfterSpeedupsWithBonus);
+    document.getElementById('troops-speedups-no-bonus').textContent = troopsWithSpeedupsNoBonus.toLocaleString();
+    document.getElementById('troops-speedups-with-bonus').textContent = troopsWithSpeedupsWithBonus.toLocaleString();
 }
 
 // Populate troop stats table
