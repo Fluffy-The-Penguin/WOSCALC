@@ -916,6 +916,7 @@
         .map-planner-status.show {
             opacity: 1;
         }
+        
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -1477,42 +1478,51 @@
                 <label for="training-bonus">Training Speed Bonus (%)</label>
                 <input type="number" id="training-bonus" min="0" max="500" value="0">
             </div>
+            
+            <div class="form-group">
+                <label>Additional Speed Bonuses</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="vice-president" style="width: 20px;"> Vice President (+10%)</label>
+                    <label><input type="checkbox" id="minister-education" style="width: 20px;"> Minister of Education (+50%)</label>
+                    <label><input type="checkbox" id="mobilize" style="width: 20px;"> Mobilize (+30%)</label>
+                </div>
+            </div>
         </div>
     </div>
     
     <div id="troops-result" class="result" style="display: block;">
-    <h3><i class="fas fa-clipboard-check"></i> Calculation Results</h3>
-    
-     <div class="calculator-grid">
-        <div>
-            <h4>Resources Required</h4>
-            <p>Meat: <span id="meat-required">0</span></p>
-            <p>Wood: <span id="wood-required">0</span></p>
-            <p>Coal: <span id="coal-required">0</span></p>
-            <p>Iron: <span id="iron-required">0</span></p>
-            <p>Total Power: <span id="power-total">0</span></p>
-        </div>
+        <h3><i class="fas fa-clipboard-check"></i> Calculation Results</h3>
         
-        <div>
-            <h4>Training Times</h4>
-            <p>Per Troop: <span id="time-per-troop">0s</span></p>
-            <p>Base Total: <span id="base-time-total">0s</span></p>
-            <p>With Bonus: <span id="time-with-bonus">0s</span></p>
-        </div>
-        
-        <div>
-            <h4>With Speedups (No Bonus)</h4>
-            <p>Remaining Time: <span id="time-after-speedups-no-bonus">0s</span></p>
-            <p>Troops Trainable: <span id="troops-speedups-no-bonus">0</span></p>
-        </div>
-        
-        <div>
-            <h4>With Speedups (With Bonus)</h4>
-            <p>Remaining Time: <span id="time-after-speedups-with-bonus">0s</span></p>
-            <p>Troops Trainable: <span id="troops-speedups-with-bonus">0</span></p>
+        <div class="calculator-grid">
+            <div>
+                <h4>Resources Required</h4>
+                <p>Meat: <span id="meat-required">0</span></p>
+                <p>Wood: <span id="wood-required">0</span></p>
+                <p>Coal: <span id="coal-required">0</span></p>
+                <p>Iron: <span id="iron-required">0</span></p>
+                <p>Total Power: <span id="power-total">0</span></p>
+            </div>
+            
+            <div>
+                <h4>Training Times</h4>
+                <p>Per Troop: <span id="time-per-troop">0s</span></p>
+                <p>Base Total: <span id="base-time-total">0s</span></p>
+                <p>With Bonus: <span id="time-with-bonus">0s</span></p>
+            </div>
+            
+            <div>
+                <h4>With Speedups (No Bonus)</h4>
+                <p>Remaining Time: <span id="time-after-speedups-no-bonus">0s</span></p>
+                <p>Troops Trainable: <span id="troops-speedups-no-bonus">0</span></p>
+            </div>
+            
+            <div>
+                <h4>With Speedups (With Bonus)</h4>
+                <p>Remaining Time: <span id="time-after-speedups-with-bonus">0s</span></p>
+                <p>Troops Trainable: <span id="troops-speedups-with-bonus">0</span></p>
+            </div>
         </div>
     </div>
-</div>
     
     <div class="requirements-table">
         <h3><i class="fas fa-table"></i> Troop Statistics by Tier</h3>
@@ -2266,7 +2276,13 @@ function calculateTroops() {
     const tier = parseInt(document.getElementById('troop-tier').value);
     const count = parseInt(document.getElementById('troop-count').value) || 0;
     const speedups = parseInt(document.getElementById('speedups').value) || 0;
-    const bonus = parseFloat(document.getElementById('training-bonus').value) || 0;
+    const baseBonus = parseFloat(document.getElementById('training-bonus').value) || 0;
+    
+    // Additional speed bonuses
+    const vicePresident = document.getElementById('vice-president').checked ? 10 : 0;
+    const ministerEducation = document.getElementById('minister-education').checked ? 50 : 0;
+    const mobilize = document.getElementById('mobilize').checked ? 30 : 0;
+    const totalBonus = baseBonus + vicePresident + ministerEducation + mobilize;
 
     const troopStats = troopData[troopType].tiers[tier];
     if (!troopStats) return;
@@ -2283,7 +2299,7 @@ function calculateTroops() {
     const baseTotalTime = timePerTroop * count;
     
     // With bonus calculations
-    const speedMultiplier = 1 + (bonus / 100);
+    const speedMultiplier = 1 + (totalBonus / 100);
     const timeWithBonus = Math.floor(baseTotalTime / speedMultiplier);
     const timePerTroopWithBonus = timePerTroop / speedMultiplier;
 
@@ -2351,6 +2367,17 @@ function populateTroopStatsTable() {
         }
     }
 }
+
+// Event listeners for input changes
+document.getElementById('troop-type').addEventListener('change', calculateTroops);
+document.getElementById('troop-tier').addEventListener('change', calculateTroops);
+document.getElementById('troop-count').addEventListener('input', calculateTroops);
+document.getElementById('speedups').addEventListener('input', calculateTroops);
+document.getElementById('training-bonus').addEventListener('input', calculateTroops);
+document.getElementById('vice-president').addEventListener('change', calculateTroops);
+document.getElementById('minister-education').addEventListener('change', calculateTroops);
+document.getElementById('mobilize').addEventListener('change', calculateTroops);
+
 
 
 // --- MAP PLANNER LOGIC ---
