@@ -931,6 +931,7 @@
                 <li><a href="#" data-section="hero-shards"><i class="fas fa-star"></i> Hero Shards</a></li>
                 <li><a href="#" data-section="chief-gears"><i class="fas fa-cogs"></i> Chief Gears</a></li>
                 <li><a href="#" data-section="chief-charms"><i class="fas fa-gem"></i> Chief Charms</a></li>
+                <li><a href="#" data-section="troops-train"><i class="fas fa-gem"></i> Troop Calculator</a></li>
                 <li><a href="#" data-section="map-planner"><i class="fas fa-map"></i> Map Planner</a></li>
             </ul>
         </nav>
@@ -945,6 +946,7 @@
                 <li><strong>Hero Shards Calculator</strong> - Plan your hero upgrades</li>
                 <li><strong>Chief Gears Calculator</strong> - Track gear upgrade costs</li>
                 <li><strong>Chief Charms Calculator</strong> - Manage charm resources</li>
+                <li><strong>Troops Calculator</strong> - Calculate resources and time taken for troops</li>
                 <li><strong>Map Planner</strong> - Design your base layout</li>
             </ol>
             
@@ -1425,6 +1427,105 @@
     </p>
 </div>
 </section>
+
+        
+<!-- Troops Calculator -->
+<section id="troops-train" class="calculator-section">
+    <h2><i class="fas fa-users"></i> Troop Calculator</h2>
+    
+    <div class="calculator-grid">
+        <div>
+            <div class="form-group">
+                <label for="troop-type">Troop Type</label>
+                <select id="troop-type">
+                    <option value="infantry">Infantry</option>
+                    <option value="lancers">Lancers</option>
+                    <option value="marksman">Marksman</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="troop-tier">Troop Tier</label>
+                <select id="troop-tier">
+                    <option value="1">T1</option>
+                    <option value="2">T2</option>
+                    <option value="3">T3</option>
+                    <option value="4">T4</option>
+                    <option value="5">T5</option>
+                    <option value="6">T6</option>
+                    <option value="7">T7</option>
+                    <option value="8">T8</option>
+                    <option value="9">T9</option>
+                    <option value="10">T10</option>
+                    <option value="11">T11</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="troop-count">Number of Troops</label>
+                <input type="number" id="troop-count" min="1" value="1000">
+            </div>
+        </div>
+        
+        <div>
+            <div class="form-group">
+                <label for="speedups">Speedups Available (minutes)</label>
+                <input type="number" id="speedups" min="0" value="0">
+            </div>
+            
+            <div class="form-group">
+                <label for="training-bonus">Training Speed Bonus (%)</label>
+                <input type="number" id="training-bonus" min="0" max="500" value="0">
+            </div>
+        </div>
+    </div>
+    
+    <div id="troops-result" class="result" style="display: block;">
+    <h3><i class="fas fa-clipboard-check"></i> Calculation Results</h3>
+    
+    <div class="calculator-grid">
+        <div>
+            <h4>Resources Required</h4>
+            <p>Meat: <span id="meat-required">0</span></p>
+            <p>Wood: <span id="wood-required">0</span></p>
+            <p>Coal: <span id="coal-required">0</span></p>
+            <p>Iron: <span id="iron-required">0</span></p>
+            <p>Total Power: <span id="power-total">0</span></p>
+        </div>
+        
+        <div>
+            <h4>Training Time</h4>
+            <p>Per Troop: <span id="time-per-troop">0s</span></p>
+            <p>Base Total Time: <span id="base-time-total">0s</span></p>
+            <p>With Bonus: <span id="time-with-bonus">0s</span></p>
+            <p>After Speedups: <span id="time-with-speedups">0s</span></p>
+            <p>Troops with Speedups: <span id="troops-with-speedups">0</span></p>
+        </div>
+    </div>
+</div>
+    
+    <div class="requirements-table">
+        <h3><i class="fas fa-table"></i> Troop Statistics by Tier</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tier</th>
+                    <th>Training Time</th>
+                    <th>Meat</th>
+                    <th>Wood</th>
+                    <th>Coal</th>
+                    <th>Iron</th>
+                    <th>Power</th>
+                </tr>
+            </thead>
+            <tbody id="troop-stats-table">
+                <!-- Will be populated by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
 
         <!-- Map Planner Section -->
         <section id="map-planner" class="calculator-section">
@@ -2071,6 +2172,164 @@ function calculateCharms() {
     document.getElementById("steps-body-charms").innerHTML = stepsHTML;
     document.getElementById("charms-result").style.display = "block";
 }
+// Troop data
+const troopData = {
+    infantry: {
+        name: "Infantry",
+        tiers: {
+            1: { time: 12, meat: 36, wood: 27, coal: 7, iron: 2, power: 3 },
+            2: { time: 17, meat: 58, wood: 44, coal: 10, iron: 3, power: 4 },
+            3: { time: 24, meat: 92, wood: 69, coal: 17, iron: 4, power: 6 },
+            4: { time: 32, meat: 120, wood: 90, coal: 21, iron: 5, power: 9 },
+            5: { time: 44, meat: 156, wood: 117, coal: 27, iron: 6, power: 13 },
+            6: { time: 60, meat: 186, wood: 140, coal: 33, iron: 7, power: 20 },
+            7: { time: 83, meat: 279, wood: 210, coal: 49, iron: 11, power: 28 },
+            8: { time: 113, meat: 558, wood: 419, coal: 98, iron: 21, power: 38 },
+            9: { time: 131, meat: 1394, wood: 1046, coal: 244, iron: 51, power: 50 },
+            10: { time: 152, meat: 2788, wood: 2091, coal: 488, iron: 102, power: 66 },
+            11: { time: 180, meat: 6970, wood: 5228, coal: 1220, iron: 253, power: 80 }
+        }
+    },
+    lancers: {
+        name: "Lancers",
+        tiers: {
+            1: { time: 12, meat: 32, wood: 30, coal: 7, iron: 2, power: 3 },
+            2: { time: 17, meat: 51, wood: 48, coal: 10, iron: 3, power: 4 },
+            3: { time: 24, meat: 81, wood: 76, coal: 16, iron: 4, power: 6 },
+            4: { time: 32, meat: 105, wood: 99, coal: 21, iron: 5, power: 9 },
+            5: { time: 44, meat: 136, wood: 129, coal: 27, iron: 7, power: 13 },
+            6: { time: 60, meat: 163, wood: 154, coal: 32, iron: 8, power: 20 },
+            7: { time: 83, meat: 244, wood: 231, coal: 48, iron: 11, power: 28 },
+            8: { time: 113, meat: 488, wood: 461, coal: 95, iron: 22, power: 38 },
+            9: { time: 131, meat: 1220, wood: 1151, coal: 237, iron: 55, power: 50 },
+            10: { time: 152, meat: 2440, wood: 2301, coal: 474, iron: 109, power: 66 },
+            11: { time: 180, meat: 6099, wood: 5751, coal: 1185, iron: 271, power: 80 }
+        }
+    },
+    marksman: {
+        name: "Marksman",
+        tiers: {
+            1: { time: 12, meat: 23, wood: 34, coal: 6, iron: 2, power: 3 },
+            2: { time: 17, meat: 36, wood: 54, coal: 9, iron: 4, power: 4 },
+            3: { time: 24, meat: 58, wood: 86, coal: 15, iron: 5, power: 6 },
+            4: { time: 32, meat: 75, wood: 111, coal: 19, iron: 6, power: 9 },
+            5: { time: 44, meat: 97, wood: 144, coal: 24, iron: 8, power: 13 },
+            6: { time: 60, meat: 117, wood: 173, coal: 29, iron: 10, power: 20 },
+            7: { time: 83, meat: 175, wood: 258, coal: 44, iron: 14, power: 28 },
+            8: { time: 113, meat: 349, wood: 516, coal: 87, iron: 28, power: 38 },
+            9: { time: 131, meat: 872, wood: 1290, coal: 217, iron: 70, power: 50 },
+            10: { time: 152, meat: 1740, wood: 2579, coal: 433, iron: 140, power: 66 },
+            11: { time: 180, meat: 4357, wood: 6448, coal: 1081, iron: 349, power: 80 }
+        }
+    }
+};
+
+// Format seconds into human-readable time
+function formatTime(seconds) {
+    if (seconds < 60) {
+        return `${seconds}s`;
+    }
+    
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    
+    if (minutes < 60) {
+        return `${minutes}m ${remainingSeconds}s`;
+    }
+    
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    
+    if (hours < 24) {
+        return `${hours}h ${remainingMinutes}m ${remainingSeconds}s`;
+    }
+    
+    const days = Math.floor(hours / 24);
+    const remainingHours = hours % 24;
+    
+    return `${days}d ${remainingHours}h ${remainingMinutes}m ${remainingSeconds}s`;
+}
+
+// Calculate troop training
+// Calculate troop training
+function calculateTroops() {
+    const troopType = document.getElementById('troop-type').value;
+    const tier = parseInt(document.getElementById('troop-tier').value);
+    const count = parseInt(document.getElementById('troop-count').value) || 0;
+    const speedups = parseInt(document.getElementById('speedups').value) || 0;
+    const bonus = parseInt(document.getElementById('training-bonus').value) || 0;
+    
+    const troopStats = troopData[troopType].tiers[tier];
+    if (!troopStats) return;
+    
+    // Calculate resources
+    const meat = troopStats.meat * count;
+    const wood = troopStats.wood * count;
+    const coal = troopStats.coal * count;
+    const iron = troopStats.iron * count;
+    const power = troopStats.power * count;
+    
+    // Calculate time values
+    const timePerTroop = troopStats.time;
+    const baseTotalTime = timePerTroop * count; // Without any bonuses
+    const timeWithBonus = Math.ceil(baseTotalTime / (1 + bonus/100)); // With training bonus
+    const speedupSeconds = speedups * 60; // Convert minutes to seconds
+    const timeAfterSpeedups = Math.max(0, timeWithBonus - speedupSeconds); // After applying speedups
+    
+    // Calculate how many troops can be trained with speedups
+    const timePerTroopWithBonus = Math.ceil(timePerTroop / (1 + bonus/100));
+    const maxTroopsWithSpeedups = Math.floor(speedupSeconds / timePerTroopWithBonus);
+    
+    // Update results
+    document.getElementById('meat-required').textContent = meat.toLocaleString();
+    document.getElementById('wood-required').textContent = wood.toLocaleString();
+    document.getElementById('coal-required').textContent = coal.toLocaleString();
+    document.getElementById('iron-required').textContent = iron.toLocaleString();
+    document.getElementById('power-total').textContent = power.toLocaleString();
+    
+    document.getElementById('time-per-troop').textContent = formatTime(timePerTroop);
+    document.getElementById('base-time-total').textContent = formatTime(baseTotalTime);
+    document.getElementById('time-with-bonus').textContent = formatTime(timeWithBonus);
+    document.getElementById('time-with-speedups').textContent = formatTime(timeAfterSpeedups);
+    document.getElementById('troops-with-speedups').textContent = maxTroopsWithSpeedups.toLocaleString();
+}
+
+// Populate troop stats table
+function populateTroopStatsTable() {
+    const tableBody = document.getElementById('troop-stats-table');
+    tableBody.innerHTML = '';
+    
+    for (const [type, data] of Object.entries(troopData)) {
+        // Add type header
+        const headerRow = document.createElement('tr');
+        const headerCell = document.createElement('td');
+        headerCell.colSpan = 7;
+        headerCell.textContent = data.name;
+        headerCell.style.fontWeight = 'bold';
+        headerCell.style.backgroundColor = '#f0f0f0';
+        headerRow.appendChild(headerCell);
+        tableBody.appendChild(headerRow);
+        
+        // Add tier rows
+        for (let tier = 1; tier <= 11; tier++) {
+            const stats = data.tiers[tier];
+            if (!stats) continue;
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>T${tier}</td>
+                <td>${formatTime(stats.time)}</td>
+                <td>${stats.meat}</td>
+                <td>${stats.wood}</td>
+                <td>${stats.coal}</td>
+                <td>${stats.iron}</td>
+                <td>${stats.power}</td>
+            `;
+            tableBody.appendChild(row);
+        }
+    }
+}
+
 
 // --- MAP PLANNER LOGIC ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -3070,6 +3329,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Initialize troops calculator
+populateTroopStatsTable();
+calculateTroops();
+
+// Add event listeners for live updates
+const troopInputs = [
+    'troop-type', 'troop-tier', 'troop-count', 
+    'speedups', 'training-bonus'
+];
+
+troopInputs.forEach(id => {
+    document.getElementById(id).addEventListener('input', calculateTroops);
+});
     // Initialize charms calculator
     const charmsContainer = document.getElementById("charms-container");
     for (let i = 0; i < 6; i++) {
