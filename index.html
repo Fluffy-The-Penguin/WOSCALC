@@ -1487,7 +1487,10 @@
             </div>
             
             <div class="form-group">
-                <label for="troop-tier">Troop Tier</label>
+                <label for="troop-tier">Troop Tier <span class="tooltip">
+            <i class="fas fa-question-circle"></i>
+            <span class="tooltiptext">The T10 option is for T10 and FC troops. Every calculation will be right, except for the power, since T10 and FC troops take the same amount of resources but give different power</span>
+        </span></label>
                 <select id="troop-tier">
                     <option value="11">T11</option>
                     <option value="10">T10</option>
@@ -1516,7 +1519,10 @@
             </div>
             
             <div class="form-group">
-                <label for="training-bonus">Training Speed Bonus (%)</label>
+                <label for="training-bonus">Training Speed Bonus (%)<span class="tooltip">
+            <i class="fas fa-question-circle"></i>
+            <span class="tooltiptext">Go to your Power -> Scroll down to the Military section -> Training Speed</span>
+        </span></label>
                 <input type="number" id="training-bonus" min="0" max="500" value="0">
             </div>
             
@@ -1553,18 +1559,24 @@
             </div>
             
             <div>
-                <h4>With Speedups (No Bonus)</h4>
+                <h4>With Speedups (No Bonus)<span class="tooltip">
+            <i class="fas fa-question-circle"></i>
+            <span class="tooltiptext">How many troops you can train with how many more speedups you will need with no bonus active (for nerds)</span>
+        </span></h4>
                 <p>Remaining Time: <span id="time-after-speedups-no-bonus">0s</span></p>
                 <p>Troops Trainable: <span id="troops-speedups-no-bonus">0</span></p>
             </div>
             
             <div>
-                <h4>With Speedups (With Bonus)</h4>
+                <h4>With Speedups (With Bonus)<span class="tooltip">
+            <i class="fas fa-question-circle"></i>
+            <span class="tooltiptext">How many troops you can train with how many more speedups you will need</span>
+        </span></h4>
                 <p>Remaining Time: <span id="time-after-speedups-with-bonus">0s</span></p>
                 <p>Troops Trainable: <span id="troops-speedups-with-bonus">0</span></p>
             </div>
         </div>
-        <p style="color: red; font-weight: bolder; font-size: small; font-style: italic;">Note: T10 option is for T10 and FC troops, every calculation will be right except for the power since T10 and FC troops takes the same amount of resources but give different power. </p>
+        
     </div>
     
     <div class="requirements-table">
