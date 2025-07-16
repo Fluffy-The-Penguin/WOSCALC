@@ -1363,19 +1363,59 @@
     </p>
 </div>
 </section>
-        <!-- Chief Charms Calculator -->
+<!-- Chief Charms Calculator -->
 <section id="chief-charms" class="calculator-section">
     <h2><i class="fas fa-gem"></i> Chief Charms Calculator</h2>
     <p>Select current and target levels for each of the 6 gears below:</p>
     <div id="charms-container"></div>
+    
+    <!-- Current Resource Inputs -->
+    <div class="form-group">
+        <label for="owned-guides">
+            Current Charm Guides Owned (optional)
+            <span class="tooltip">
+                <i class="fas fa-question-circle"></i>
+                <span class="tooltiptext">Enter the number of Charm Guides you currently have to calculate how many more you need</span>
+            </span>
+        </label>
+        <input type="number" id="owned-guides" min="0" value="0" placeholder="Enter current Charm Guides">
+    </div>
+    <div class="form-group">
+        <label for="owned-charm-designs">
+            Current Charm Designs Owned (optional)
+            <span class="tooltip">
+                <i class="fas fa-question-circle"></i>
+                <span class="tooltiptext">Enter the number of Charm Designs you currently have to calculate how many more you need</span>
+            </span>
+        </label>
+        <input type="number" id="owned-charm-designs" min="0" value="0" placeholder="Enter current Charm Designs">
+    </div>
+    <div class="form-group">
+        <label for="owned-jewel-secrets">
+            Current Jewel Secrets Owned (optional)
+            <span class="tooltip">
+                <i class="fas fa-question-circle"></i>
+                <span class="tooltiptext">Enter the number of Jewel Secrets you currently have to calculate how many more you need</span>
+            </span>
+        </label>
+        <input type="number" id="owned-jewel-secrets" min="0" value="0" placeholder="Enter current Jewel Secrets">
+    </div>
+    
     <button id="calculate-charms">
         <i class="fas fa-calculator"></i> Calculate Resource Requirements
     </button>
+    
     <div id="charms-result" class="result" style="display: none;">
         <h3><i class="fas fa-clipboard-check"></i> Calculation Results</h3>
         <p>Total Charm Guides Needed: <span id="total-guides">0</span></p>
         <p>Total Charm Designs Needed: <span id="total-designs">0</span></p>
         <p>Total Jewel Secrets Needed: <span id="total-secrets">0</span></p>
+        <hr>
+        <p>After Deducting Owned Resources:</p>
+        <p>Charm Guides Needed: <span id="final-guides">0</span></p>
+        <p>Charm Designs Needed: <span id="final-designs">0</span></p>
+        <p>Jewel Secrets Needed: <span id="final-secrets">0</span></p>
+        
         <h3 style="margin-top: 20px;"><i class="fas fa-list-ol"></i> Upgrade Breakdown</h3>
         <div style="overflow-x: auto;">
             <table>
@@ -1394,39 +1434,40 @@
             </table>
         </div>
     </div>
+    
     <div class="requirements-table">
-    <h3><i class="fas fa-table"></i> Charm Upgrade Requirements</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Charm Level</th>
-                <th>Charm Guides</th>
-                <th>Charm Designs</th>
-                <th>Jewel Secrets</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td>Level 1 → 2</td><td>40</td><td>15</td><td>-</td></tr>
-            <tr><td>Level 2 → 3</td><td>60</td><td>40</td><td>-</td></tr>
-            <tr><td>Level 3 → 4</td><td>80</td><td>100</td><td>-</td></tr>
-            <tr><td>Level 4 → 5</td><td>100</td><td>200</td><td>-</td></tr>
-            <tr><td>Level 5 → 6</td><td>120</td><td>300</td><td>-</td></tr>
-            <tr><td>Level 6 → 7</td><td>140</td><td>400</td><td>-</td></tr>
-            <tr><td>Level 7 → 8</td><td>200</td><td>400</td><td>-</td></tr>
-            <tr><td>Level 8 → 9</td><td>300</td><td>400</td><td>-</td></tr>
-            <tr><td>Level 9 → 10</td><td>420</td><td>420</td><td>-</td></tr>
-            <tr><td>Level 10 → 11</td><td>560</td><td>420</td><td>-</td></tr>
-            <tr><td>Level 11 → 12</td><td>580</td><td>450</td><td>15</td></tr>
-            <tr><td>Level 12 → 13</td><td>580</td><td>450</td><td>30</td></tr>
-            <tr><td>Level 13 → 14</td><td>600</td><td>500</td><td>45</td></tr>
-            <tr><td>Level 14 → 15</td><td>600</td><td>500</td><td>70</td></tr>
-            <tr><td>Level 15 → 16</td><td>650</td><td>550</td><td>100</td></tr>
-        </tbody>
-    </table>
-    <p class="note" style="color: green; font-weight: bold;">
-        Note: Jewel Secrets are required only from Level 12 onward. All other upgrades use Charm Guides and Charm Designs.
-    </p>
-</div>
+        <h3><i class="fas fa-table"></i> Charm Upgrade Requirements</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Charm Level</th>
+                    <th>Charm Guides</th>
+                    <th>Charm Designs</th>
+                    <th>Jewel Secrets</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Level 1 → 2</td><td>40</td><td>15</td><td>-</td></tr>
+                <tr><td>Level 2 → 3</td><td>60</td><td>40</td><td>-</td></tr>
+                <tr><td>Level 3 → 4</td><td>80</td><td>100</td><td>-</td></tr>
+                <tr><td>Level 4 → 5</td><td>100</td><td>200</td><td>-</td></tr>
+                <tr><td>Level 5 → 6</td><td>120</td><td>300</td><td>-</td></tr>
+                <tr><td>Level 6 → 7</td><td>140</td><td>400</td><td>-</td></tr>
+                <tr><td>Level 7 → 8</td><td>200</td><td>400</td><td>-</td></tr>
+                <tr><td>Level 8 → 9</td><td>300</td><td>400</td><td>-</td></tr>
+                <tr><td>Level 9 → 10</td><td>420</td><td>420</td><td>-</td></tr>
+                <tr><td>Level 10 → 11</td><td>560</td><td>420</td><td>-</td></tr>
+                <tr><td>Level 11 → 12</td><td>580</td><td>450</td><td>15</td></tr>
+                <tr><td>Level 12 → 13</td><td>580</td><td>450</td><td>30</td></tr>
+                <tr><td>Level 13 → 14</td><td>600</td><td>500</td><td>45</td></tr>
+                <tr><td>Level 14 → 15</td><td>600</td><td>500</td><td>70</td></tr>
+                <tr><td>Level 15 → 16</td><td>650</td><td>550</td><td>100</td></tr>
+            </tbody>
+        </table>
+        <p class="note" style="color: green; font-weight: bold;">
+            Note: Jewel Secrets are required only from Level 12 onward. All other upgrades use Charm Guides and Charm Designs.
+        </p>
+    </div>
 </section>
 
         
@@ -1480,14 +1521,14 @@
             </div>
             
             <div class="form-group">
-    <label>Additional Speed Bonuses</label>
-    <div class="checkbox-group">
-        <label><input type="checkbox" id="vice-president" style="width: 20px;" onchange="toggleBonusCheckboxes('vice-president')"> Vice President (+10%)</label>
-        <label><input type="checkbox" id="minister-education" style="width: 20px;" onchange="toggleBonusCheckboxes('minister-education')"> Minister of Education (+50%)</label>
-        <label><input type="checkbox" id="mobilize" style="width: 20px;"> Mobilize (+30%) (President's Skill)</label>
-    </div>
-    <p style="color: red; font-size: small; font-weight: bolder; font-style: italic;">NOTE: If these bonuses are already active in the game then you don't have to check them because they're already included in the Training Speed Bonus (%)</p>
-</div>
+                <label>Additional Speed Bonuses</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="vice-president" style="width: 20px;"> Vice President (+10%)</label>
+                    <label><input type="checkbox" id="minister-education" style="width: 20px;"> Minister of Education (+50%)</label>
+                    <label><input type="checkbox" id="mobilize" style="width: 20px;"> Mobilize (+30%) (President's Skill)</label>
+                </div>
+                <p style="color: red; font-size: small; font-weight: bolder; font-style: italic;">NOTE: If these bonuses are already active in the game then you don't have to check them because they're already included in the Training Speed Bonus (%)</p>
+            </div>
         </div>
     </div>
     
@@ -2154,8 +2195,14 @@ function createCharmsSelector(gearIndex) {
 }
 
 function calculateCharms() {
+    // Get owned resources
+    const ownedGuides = parseInt(document.getElementById('owned-guides').value) || 0;
+    const ownedDesigns = parseInt(document.getElementById('owned-charm-designs').value) || 0;
+    const ownedSecrets = parseInt(document.getElementById('owned-jewel-secrets').value) || 0;
+
     let totalGuides = 0, totalDesigns = 0, totalSecrets = 0;
     let stepsHTML = "";
+    
     charmGearNames.forEach((gear, gearIndex) => {
         gear.charms.forEach((charm, charmIndex) => {
             const currentSelect = document.querySelector(`select.current-level.${gear.value}-${charmIndex}`);
@@ -2187,9 +2234,18 @@ function calculateCharms() {
         });
     });
 
+    // Calculate final needed after deducting owned
+    const finalGuides = Math.max(0, totalGuides - ownedGuides);
+    const finalDesigns = Math.max(0, totalDesigns - ownedDesigns);
+    const finalSecrets = Math.max(0, totalSecrets - ownedSecrets);
+
+    // Update results display
     document.getElementById("total-guides").textContent = totalGuides.toLocaleString();
     document.getElementById("total-designs").textContent = totalDesigns.toLocaleString();
     document.getElementById("total-secrets").textContent = totalSecrets.toLocaleString();
+    document.getElementById("final-guides").textContent = finalGuides.toLocaleString();
+    document.getElementById("final-designs").textContent = finalDesigns.toLocaleString();
+    document.getElementById("final-secrets").textContent = finalSecrets.toLocaleString();
     document.getElementById("steps-body-charms").innerHTML = stepsHTML;
     document.getElementById("charms-result").style.display = "block";
 }
@@ -2331,20 +2387,6 @@ function calculateTroops() {
     document.getElementById('time-after-speedups-with-bonus').textContent = formatTime(timeAfterSpeedupsWithBonus);
     document.getElementById('troops-speedups-no-bonus').textContent = troopsWithSpeedupsNoBonus.toLocaleString();
     document.getElementById('troops-speedups-with-bonus').textContent = troopsWithSpeedupsWithBonus.toLocaleString();
-}
-
-function toggleBonusCheckboxes(checkboxId) {
-    const vicePresident = document.getElementById('vice-president');
-    const ministerEducation = document.getElementById('minister-education');
-    
-    if (checkboxId === 'vice-president' && vicePresident.checked) {
-        ministerEducation.checked = false;
-    } else if (checkboxId === 'minister-education' && ministerEducation.checked) {
-        vicePresident.checked = false;
-    }
-    
-    // Recalculate troops whenever checkbox state changes
-    calculateTroops();
 }
 
 // Populate troop stats table
