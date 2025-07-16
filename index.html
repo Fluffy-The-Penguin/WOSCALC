@@ -916,7 +916,31 @@
         .map-planner-status.show {
             opacity: 1;
         }
-        
+         .small-button {
+        background-color: var(--secondary-color);
+        color: var(--dark-color);
+        border: none;
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0;
+    }
+    .small-button i {
+        margin-right: 5px;
+        font-size: 0.9rem;
+    }
+    .small-button:hover {
+        background-color: #f39c12;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -951,7 +975,7 @@
                 <li><strong>Map Planner</strong> - Design your base layout</li>
             </ol>
             
-            <div class="gear-block" style="background-color: #e8f4f8;">
+            <div style="background-color: #e8f4f8; padding: 10px; border-radius: 10px;">
                 <p>Use the navigation bar above to switch between tools. All calculations are performed in real-time!</p>
             </div>
         </div>
@@ -965,7 +989,7 @@
         <li>Select <strong>"Request desktop site"</strong> or <strong>"Desktop version"</strong></li>
         <li>Reload the page to load the full desktop version of this planner</li>
     </ol>
-    <div class="gear-block" style="background-color: #e8f4f8;">
+    <div style="background-color: #e8f4f8; padding: 10px; border-radius: 10px;">
     <p>
     For best experience, use this planner on desktop or enable "Desktop Site" on mobile.
     </p>
@@ -1215,9 +1239,17 @@
 
         <!-- Chief Gears Calculator -->
 <section id="chief-gears" class="calculator-section">
-    <h2><i class="fas fa-cogs"></i> Chief Gears Calculator</h2>
+    <h2><i class="fas fa-helmet-battle"></i> Chief Gears Calculator</h2>
 
-     <p>Select current and target levels for each of the 6 gears below:</p>
+     <p style="margin-bottom: 10px;">Select current and target levels for each of the 6 gears below:</p>
+     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+    <button id="select-all-current-gears" class="small-button">
+        <i class="fas fa-check-circle"></i> Set All Current
+    </button>
+    <button id="select-all-target-gears" class="small-button">
+        <i class="fas fa-arrow-circle-up"></i> Set All Target
+    </button>
+</div>
     <div id="gears-container"></div>
 
     <!-- Current Resource Inputs -->
@@ -1362,11 +1394,24 @@
         Note: Each gear has multiple levels across different rarities. The resources listed are cumulative per upgrade.
     </p>
 </div>
+
 </section>
 <!-- Chief Charms Calculator -->
 <section id="chief-charms" class="calculator-section">
     <h2><i class="fas fa-gem"></i> Chief Charms Calculator</h2>
-    <p>Select current and target levels for each of the 6 gears below:</p>
+
+
+    <p style="margin-bottom: 10px;">Select current and target levels for each of the 6 gears below:</p>
+
+<div style="display: flex; gap: 10px; margin-bottom: 15px;">
+    <button id="select-all-current-charms" class="small-button">
+        <i class="fas fa-check-circle"></i> Set All Current
+    </button>
+    <button id="select-all-target-charms" class="small-button">
+        <i class="fas fa-arrow-circle-up"></i> Set All Target
+    </button>
+</div>
+    
     <div id="charms-container"></div>
     
     <!-- Current Resource Inputs -->
@@ -1804,6 +1849,7 @@
                 document.getElementById(sectionId).classList.add('active');
             });
         });
+        
 
         // Shard Transition Map
         const shardTransitions = {
@@ -2016,7 +2062,7 @@ function calculateShards() {
             { value: "belt", label: "Belt (Marksman)" },
             { value: "staff", label: "Staff (Marksman)" }
         ];
-
+        
        function createGearSelector(index) {
     const gearDiv = document.createElement("div");
     gearDiv.className = "gear-block";
@@ -2449,7 +2495,207 @@ document.getElementById('minister-education').addEventListener('change', calcula
 document.getElementById('mobilize').addEventListener('change', calculateTroops);
 
 
-
+document.addEventListener('DOMContentLoaded', () => {
+    // Gear select all functionality
+    document.getElementById('select-all-current-gears').addEventListener('click', () => {
+        const modal = document.createElement('div');
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        modal.style.display = 'flex';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+        modal.style.zIndex = '1000';
+        
+        const modalContent = document.createElement('div');
+        modalContent.style.backgroundColor = 'white';
+        modalContent.style.padding = '20px';
+        modalContent.style.borderRadius = '8px';
+        modalContent.style.width = '300px';
+        modalContent.style.maxWidth = '90%';
+        
+        modalContent.innerHTML = `
+            <h3 style="margin-bottom: 15px;">Set All Current Gear Levels</h3>
+            <select id="gear-current-level-select" class="form-control" style="width: 100%; margin-bottom: 15px;">
+                ${generateLevelOptions()}
+            </select>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button id="cancel-gear-current" class="small-button" style="background-color: #e74c3c;">Cancel</button>
+                <button id="apply-gear-current" class="small-button">Apply</button>
+            </div>
+        `;
+        
+        modal.appendChild(modalContent);
+        document.body.appendChild(modal);
+        
+        document.getElementById('cancel-gear-current').addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+        
+        document.getElementById('apply-gear-current').addEventListener('click', () => {
+            const level = document.getElementById('gear-current-level-select').value;
+            document.querySelectorAll('.gear-block .current-level').forEach(select => {
+                select.value = level;
+            });
+            document.body.removeChild(modal);
+        });
+    });
+    
+    document.getElementById('select-all-target-gears').addEventListener('click', () => {
+        const modal = document.createElement('div');
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        modal.style.display = 'flex';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+        modal.style.zIndex = '1000';
+        
+        const modalContent = document.createElement('div');
+        modalContent.style.backgroundColor = 'white';
+        modalContent.style.padding = '20px';
+        modalContent.style.borderRadius = '8px';
+        modalContent.style.width = '300px';
+        modalContent.style.maxWidth = '90%';
+        
+        modalContent.innerHTML = `
+            <h3 style="margin-bottom: 15px;">Set All Target Gear Levels</h3>
+            <select id="gear-target-level-select" class="form-control" style="width: 100%; margin-bottom: 15px;">
+                ${generateLevelOptions()}
+            </select>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button id="cancel-gear-target" class="small-button" style="background-color: #e74c3c;">Cancel</button>
+                <button id="apply-gear-target" class="small-button">Apply</button>
+            </div>
+        `;
+        
+        modal.appendChild(modalContent);
+        document.body.appendChild(modal);
+        
+        document.getElementById('cancel-gear-target').addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+        
+        document.getElementById('apply-gear-target').addEventListener('click', () => {
+            const level = document.getElementById('gear-target-level-select').value;
+            document.querySelectorAll('.gear-block .target-level').forEach(select => {
+                select.value = level;
+            });
+            document.body.removeChild(modal);
+        });
+    });
+    
+    // Charms select all functionality
+    document.getElementById('select-all-current-charms').addEventListener('click', () => {
+        const modal = document.createElement('div');
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        modal.style.display = 'flex';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+        modal.style.zIndex = '1000';
+        
+        const modalContent = document.createElement('div');
+        modalContent.style.backgroundColor = 'white';
+        modalContent.style.padding = '20px';
+        modalContent.style.borderRadius = '8px';
+        modalContent.style.width = '300px';
+        modalContent.style.maxWidth = '90%';
+        
+        let options = '';
+        charmLevels.forEach(level => {
+            options += `<option value="${level.level}">Level ${level.level}</option>`;
+        });
+        
+        modalContent.innerHTML = `
+            <h3 style="margin-bottom: 15px;">Set All Current Charm Levels</h3>
+            <select id="charm-current-level-select" class="form-control" style="width: 100%; margin-bottom: 15px;">
+                ${options}
+            </select>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button id="cancel-charm-current" class="small-button" style="background-color: #e74c3c;">Cancel</button>
+                <button id="apply-charm-current" class="small-button">Apply</button>
+            </div>
+        `;
+        
+        modal.appendChild(modalContent);
+        document.body.appendChild(modal);
+        
+        document.getElementById('cancel-charm-current').addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+        
+        document.getElementById('apply-charm-current').addEventListener('click', () => {
+            const level = document.getElementById('charm-current-level-select').value;
+            document.querySelectorAll('.charm-set .current-level').forEach(select => {
+                select.value = level;
+            });
+            document.body.removeChild(modal);
+        });
+    });
+    
+    document.getElementById('select-all-target-charms').addEventListener('click', () => {
+        const modal = document.createElement('div');
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        modal.style.display = 'flex';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+        modal.style.zIndex = '1000';
+        
+        const modalContent = document.createElement('div');
+        modalContent.style.backgroundColor = 'white';
+        modalContent.style.padding = '20px';
+        modalContent.style.borderRadius = '8px';
+        modalContent.style.width = '300px';
+        modalContent.style.maxWidth = '90%';
+        
+        let options = '';
+        charmLevels.forEach(level => {
+            options += `<option value="${level.level}">Level ${level.level}</option>`;
+        });
+        
+        modalContent.innerHTML = `
+            <h3 style="margin-bottom: 15px;">Set All Target Charm Levels</h3>
+            <select id="charm-target-level-select" class="form-control" style="width: 100%; margin-bottom: 15px;">
+                ${options}
+            </select>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button id="cancel-charm-target" class="small-button" style="background-color: #e74c3c;">Cancel</button>
+                <button id="apply-charm-target" class="small-button">Apply</button>
+            </div>
+        `;
+        
+        modal.appendChild(modalContent);
+        document.body.appendChild(modal);
+        
+        document.getElementById('cancel-charm-target').addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+        
+        document.getElementById('apply-charm-target').addEventListener('click', () => {
+            const level = document.getElementById('charm-target-level-select').value;
+            document.querySelectorAll('.charm-set .target-level').forEach(select => {
+                select.value = level;
+            });
+            document.body.removeChild(modal);
+        });
+    });
+});
 // --- MAP PLANNER LOGIC ---
 document.addEventListener('DOMContentLoaded', () => {
             // Initialize elements
@@ -3391,13 +3637,13 @@ document.addEventListener('DOMContentLoaded', () => {
         gearContainer.appendChild(createGearSelector(i));
     }
 
-    document.getElementById("calculate-all-gears").addEventListener("click", async () => {
+     document.getElementById("calculate-all-gears").addEventListener("click", async () => {
     const button = document.getElementById("calculate-all-gears");
     button.disabled = true;
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
     
     try {
-        // Safely get owned resources with fallback to 0 if input doesn't exist
+        // Perform calculations
         const owned = {
             alloy: parseInt(document.getElementById("owned-alloy")?.value || 0),
             solution: parseInt(document.getElementById("owned-solution")?.value || 0),
@@ -3415,13 +3661,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let allSteps = [];
         
         document.querySelectorAll(".gear-block").forEach((block, index) => {
-            const currentSelect = block.querySelector(".current-level");
-            const targetSelect = block.querySelector(".target-level");
-            
-            if (!currentSelect || !targetSelect) return;
-            
-            const current = currentSelect.value;
-            const target = targetSelect.value;
+            const current = block.querySelector(".current-level").value;
+            const target = block.querySelector(".target-level").value;
             
             if (current !== target) {
                 const result = calculateGearUpgrade(current, target);
@@ -3440,13 +3681,13 @@ document.addEventListener('DOMContentLoaded', () => {
         displayGearResults(total, owned, allSteps);
         
     } catch (error) {
-        console.error("Error in calculation:", error);
-        alert("Error in calculation. Please check the console for details.");
+        alert("Error in calculation: " + error.message);
     } finally {
         button.disabled = false;
         button.innerHTML = '<i class="fas fa-calculator"></i> Calculate Total Resource Requirements';
     }
 });
+
 
 // Initialize troops calculator
 populateTroopStatsTable();
