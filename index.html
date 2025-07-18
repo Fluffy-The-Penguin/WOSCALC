@@ -321,7 +321,10 @@
             font-size: 0.9rem;
         }
         .gear-level-selector {
-            display: block;
+            display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 15px;
+    align-items: center;
         }
         .gear-preview {
             text-align: center;
@@ -384,10 +387,10 @@
             margin-bottom: 15px;
         }
         .charm-set {
-            margin-bottom: 10px;
-            background-color: #f8f8f8;
-            padding: 12px;
-            border-radius: 6px;
+            display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 15px;
+    align-items: center;
         }
         .form-group {
             margin-bottom: 12px;
@@ -941,6 +944,15 @@
         transform: translateY(-1px);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
     }
+    .requirements-table {
+  display: none;
+  margin-top: 20px;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -1316,7 +1328,7 @@
     </div>
 
    <!-- Upgrade Steps Table -->
-<div id="upgrade-steps-gears" class="requirements-table" style="display: none;">
+<div id="upgrade-steps-gears" style="display: none;">
     <h3><i class="fas fa-list-ol"></i> Gear Upgrade Breakdown</h3>
     <table>
         <thead>
@@ -1333,6 +1345,7 @@
         <tbody id="steps-body-gears"></tbody>
     </table>
 </div>
+
 <div class="requirements-table">
     <h3><i class="fas fa-table"></i> Gear Upgrade Resource Requirements</h3>
     <table>
@@ -1479,7 +1492,7 @@
             </table>
         </div>
     </div>
-    
+
     <div class="requirements-table">
         <h3><i class="fas fa-table"></i> Charm Upgrade Requirements</h3>
         <table>
@@ -2505,7 +2518,6 @@ document.getElementById('training-bonus').addEventListener('input', calculateTro
 document.getElementById('vice-president').addEventListener('change', calculateTroops);
 document.getElementById('minister-education').addEventListener('change', calculateTroops);
 document.getElementById('mobilize').addEventListener('change', calculateTroops);
-
 
 document.addEventListener('DOMContentLoaded', () => {
     // Gear select all functionality
