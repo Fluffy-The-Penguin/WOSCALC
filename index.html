@@ -8877,16 +8877,17 @@ troopInputs.forEach(id => {
             if (timeReductionBonuses.mercantilism > 0) {
                 summaryHTML += `<p>Mercantilism: <span>+${timeReductionBonuses.mercantilism.toFixed(1)}%</span></p>`;
             }
-            summaryHTML += `<p style="border-top: 1px solid #ccc; margin-top: 5px; padding-top: 5px;"><strong>Total Speed Bonus: <span>+${totalSpeedBonusPercent.toFixed(1)}%</span></strong></p>`;
-            summaryHTML += `<p><strong>Speed Multiplier: <span>x${speedMultiplier.toFixed(2)}</span></strong></p>`;
-            summaryHTML += `<p><strong>Reduced Time: <span>${formatTime(Math.floor(reducedTimeSeconds))}</span></strong></p>`; // Floor to avoid decimal seconds
+            summaryHTML += `<p style="border-top: 1px solid #ccc; margin-top: 5px; padding-top: 5px;">Total Speed Bonus: <span>+${totalSpeedBonusPercent.toFixed(1)}%</span></p>`;
+            summaryHTML += `<p>Speed Multiplier: <span>x${speedMultiplier.toFixed(2)}</span></p>`;
+            summaryHTML += `<p>Reduced Time: <span>${formatTime(Math.floor(reducedTimeSeconds))}</span></p>`; // Floor to avoid decimal seconds
             summaryHTML += '</div>';
             // --- End Time Reduction Summary ---
             
             // --- Add Speedups Summary Box ---
-            summaryHTML += '<hr />';
-            summaryHTML += '<h4>Speedups Impact</h4>';
+            
             summaryHTML += '<div class="time-reduction-summary">';
+            summaryHTML += '<p><strong>Speedups Impact:</strong></p>';
+            summaryHTML += '<hr />';
             summaryHTML += `<p>Speedups Available: <span>${formatTime(speedupsSeconds)}</span></p>`;
             summaryHTML += `<p>Time Remaining (Base): <span>${formatTime(timeAfterSpeedupsNoBonus)}</span></p>`;
             summaryHTML += `<p>Time Remaining (With Bonus): <span>${formatTime(timeAfterSpeedupsWithBonus)}</span></p>`;
