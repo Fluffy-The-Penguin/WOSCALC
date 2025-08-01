@@ -1949,7 +1949,7 @@
 
 
  <!-- Building Cost Calculator Section -->
-        <section id="building-cost" class="calculator-section active">
+        <section id="building-cost" class="calculator-section">
             <h2><i class="fas fa-building"></i> Building Cost Calculator</h2>
 
 
@@ -8857,7 +8857,7 @@ troopInputs.forEach(id => {
             // --- End Speedups Calculations ---
             
             summaryHTML += `<p>Total Construction Time (Base): <span>${formatTime(baseTimeSeconds)}</span></p>`;
-            summaryHTML += `<p>Total Construction Time (With Bonus): <span>${formatTime(reducedTimeSeconds)}</span></p>`;
+            summaryHTML += `<p>Total Construction Time (With Bonus): <span>${formatTime(Math.floor(reducedTimeSeconds))}</span></p>`;
             
             // Add time reduction summary box
             summaryHTML += '<div class="time-reduction-summary">';
@@ -8890,7 +8890,7 @@ troopInputs.forEach(id => {
             summaryHTML += '<hr />';
             summaryHTML += `<p>Speedups Available: <span>${formatTime(speedupsSeconds)}</span></p>`;
             summaryHTML += `<p>Time Remaining (Base): <span>${formatTime(timeAfterSpeedupsNoBonus)}</span></p>`;
-            summaryHTML += `<p>Time Remaining (With Bonus): <span>${formatTime(timeAfterSpeedupsWithBonus)}</span></p>`;
+            summaryHTML += `<p>Time Remaining (With Bonus): <span>${formatTime(Math.floor(timeAfterSpeedupsWithBonus))}</span></p>`;
             summaryHTML += `<p style="margin-top: 10px;">Approx. Instant Upgrades (Base): <span>${instantUpgradesNoBonus.toLocaleString()}</span></p>`;
             summaryHTML += `<p>Approx. Instant Upgrades (With Bonus): <span>${instantUpgradesWithBonus.toLocaleString()}</span></p>`;
             summaryHTML += '</div>';
@@ -8969,8 +8969,8 @@ troopInputs.forEach(id => {
             // Define the order of buildings to display - Include ALL buildings
             const buildingOrder = [
                 'furnace', 'embassy', 'command_center', 'infantry_camp',
-                'research_center', 'infirmary', 'academy', 'barricade',
-                'lancer_camp', 'marksman_camp', 'storehouse'
+                'lancer_camp', 'marksman_camp','infirmary','academy',
+                'research_center', 'barricade', 'storehouse'
             ];
 
             // Populate inputs for each building in the defined order
